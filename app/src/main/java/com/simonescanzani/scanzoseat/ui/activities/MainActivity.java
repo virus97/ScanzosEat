@@ -4,17 +4,54 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.simonescanzani.scanzoseat.R;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
+
+    RecyclerView recyclerView;
+    ArrayList<Shop> lstShop;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        lstShop = new ArrayList<>();
+        lstShop.add(new Shop("The Vegitarian","Categorie Shop","Description shop",R.drawable.thevigitarian));
+        lstShop.add(new Shop("The Wild Robot","Categorie Shop","Description shop",R.drawable.thewildrobot));
+        lstShop.add(new Shop("Maria Semples","Categorie Shop","Description shop",R.drawable.mariasemples));
+        lstShop.add(new Shop("The Martian","Categorie Shop","Description shop",R.drawable.themartian));
+        lstShop.add(new Shop("He Died with...","Categorie Shop","Description shop",R.drawable.hediedwith));
+        lstShop.add(new Shop("The Vegitarian","Categorie Shop","Description shop",R.drawable.thevigitarian));
+        lstShop.add(new Shop("The Wild Robot","Categorie Shop","Description shop",R.drawable.thewildrobot));
+        lstShop.add(new Shop("Maria Semples","Categorie Shop","Description shop",R.drawable.mariasemples));
+        lstShop.add(new Shop("The Martian","Categorie Shop","Description shop",R.drawable.themartian));
+        lstShop.add(new Shop("He Died with...","Categorie Shop","Description shop",R.drawable.hediedwith));
+        lstShop.add(new Shop("The Vegitarian","Categorie Shop","Description shop",R.drawable.thevigitarian));
+        lstShop.add(new Shop("The Wild Robot","Categorie Shop","Description shop",R.drawable.thewildrobot));
+        lstShop.add(new Shop("Maria Semples","Categorie Shop","Description shop",R.drawable.mariasemples));
+        lstShop.add(new Shop("The Martian","Categorie Shop","Description shop",R.drawable.themartian));
+        lstShop.add(new Shop("He Died with...","Categorie Shop","Description shop",R.drawable.hediedwith));
+
+
+        recyclerView = findViewById(R.id.recyclerview_shop);
+
+
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, lstShop);
+        recyclerView.setAdapter(adapter);
+        GridLayoutManager manager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(manager);
+
+
+
     }
 
     @Override
@@ -35,4 +72,5 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

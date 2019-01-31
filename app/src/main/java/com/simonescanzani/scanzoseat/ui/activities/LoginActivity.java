@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        onCreate(R.layout.login_activity_light);
+        onCreate(R.layout.activity_login_light);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
@@ -99,9 +99,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked)
-                    onCreate(R.layout.login_activity_dark);
+                    onCreate(R.layout.activity_login_dark);
                 else
-                    onCreate(R.layout.login_activity_light);
+                    onCreate(R.layout.activity_login_light);
             }
 
         });
