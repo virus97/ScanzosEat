@@ -4,10 +4,13 @@
 
     <item android:id="@+id/login_menu"
         android:title="@string/login_text"
+        android:icon="@drawable/ic_user_profile"
         app:showAsAction="always"
         />
 
     <item android:id="@+id/checkout_menu"
+        android:icon="@drawable/ic_shopping_cart"
+        app:showAsAction="always"
         android:title="@string/checkout"
         />
 
