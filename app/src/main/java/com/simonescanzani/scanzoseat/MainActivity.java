@@ -113,34 +113,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         if(v.getId()==R.id.buttonLogin) {
             Log.i("Button", "Login premuto");
-            if(doLogin()){
+            if(Utilities.doLogin(this, edtxMail.getText().toString(),edtxPassword.getText().toString(), LEN_PASS)){
                // Intent intent = new Intent(this, WelcomeActivity.class);
                // intent.putExtra("email",edtxMail.getText().toString());
                // startActivity(intent);
             }
         }
-    }
-
-    public boolean doLogin(){
-        if(!isEmailValid(edtxMail.getText().toString())) {
-            showToast(R.string.email_invalid);
-            return false;
-        }
-        if(!(edtxPassword.getText().toString().length()>LEN_PASS)){
-            showToast(R.string.password_invalid);
-            return false;
-        }
-
-        showToast(R.string.credential_ok);
-        return true;
-    }
-
-    private boolean isEmailValid(CharSequence email) {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-
-    private void showToast(@StringRes int resId){
-        Toast.makeText(this, getString(resId), Toast.LENGTH_SHORT).show();
     }
 
     @Override
