@@ -12,4 +12,5 @@
     <string name="welcome_activity">Welcome</string>
     <string name="invia_mail">Invia Mail</string>
     <string name="insert_cell">Insert phone number</string>
+    <string name="checkout">CheckOut</string>
 </resources>

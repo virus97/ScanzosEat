@@ -1,12 +1,14 @@
-package com.simonescanzani.scanzoseat;
+package com.simonescanzani.scanzoseat.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -14,10 +16,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.simonescanzani.scanzoseat.R;
+import com.simonescanzani.scanzoseat.Utilities;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     LinearLayout currentLayout;
 
@@ -33,7 +37,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        onCreate(R.layout.activity_main_light);
+        onCreate(R.layout.login_activity_light);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     protected void onCreate(@LayoutRes int layoutPassed) {
@@ -48,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         lblDarkMode = findViewById(R.id.lblDarkMode);
 
-        currentLayout = findViewById(R.id.mainLinearLayout);
+        currentLayout = findViewById(R.id.loginLinearLayout);
 
         if(hasInvitationCode())
             btnRegister.setVisibility(View.GONE);
@@ -60,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, RegisterActivity.class));
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
                 Log.i("Button", "Register premuto");
             }
         });
@@ -70,22 +76,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked) {
                     currentLayout.setBackgroundColor(parseColor("#FFFFFF"));
-                    currentLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.backgroundDark));
-                    edtxMail.setHintTextColor(ContextCompat.getColor(MainActivity.this,R.color.backgroundLight));
-                    edtxPassword.setHintTextColor(ContextCompat.getColor(MainActivity.this,R.color.backgroundLight));
-                    lblDarkMode.setTextColor(ContextCompat.getColor(MainActivity.this,R.color.backgroundLight));
-                    edtxMail.setTextColor(ContextCompat.getColor(MainActivity.this,R.color.backgroundLight));
-                    edtxPassword.setTextColor(ContextCompat.getColor(MainActivity.this,R.color.backgroundLight));
-                    lblDarkMode.setTextColor(ContextCompat.getColor(MainActivity.this,R.color.backgroundLight));
+                    currentLayout.setBackgroundColor(ContextCompat.getColor(LoginActivity.this, R.color.backgroundDark));
+                    edtxMail.setHintTextColor(ContextCompat.getColor(LoginActivity.this,R.color.backgroundLight));
+                    edtxPassword.setHintTextColor(ContextCompat.getColor(LoginActivity.this,R.color.backgroundLight));
+                    lblDarkMode.setTextColor(ContextCompat.getColor(LoginActivity.this,R.color.backgroundLight));
+                    edtxMail.setTextColor(ContextCompat.getColor(LoginActivity.this,R.color.backgroundLight));
+                    edtxPassword.setTextColor(ContextCompat.getColor(LoginActivity.this,R.color.backgroundLight));
+                    lblDarkMode.setTextColor(ContextCompat.getColor(LoginActivity.this,R.color.backgroundLight));
                 }
                 else {
-                    currentLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.backgroundLight));
-                    edtxMail.setHintTextColor(ContextCompat.getColor(MainActivity.this,R.color.hint_colorLight));
-                    edtxPassword.setHintTextColor(ContextCompat.getColor(MainActivity.this,R.color.hint_colorLight));
-                    lblDarkMode.setTextColor(ContextCompat.getColor(MainActivity.this,R.color.backgroundDark));
-                    edtxMail.setTextColor(ContextCompat.getColor(MainActivity.this,R.color.backgroundDark));
-                    edtxPassword.setTextColor(ContextCompat.getColor(MainActivity.this,R.color.backgroundDark));
-                    lblDarkMode.setTextColor(ContextCompat.getColor(MainActivity.this,R.color.backgroundDark));
+                    currentLayout.setBackgroundColor(ContextCompat.getColor(LoginActivity.this, R.color.backgroundLight));
+                    edtxMail.setHintTextColor(ContextCompat.getColor(LoginActivity.this,R.color.hint_colorLight));
+                    edtxPassword.setHintTextColor(ContextCompat.getColor(LoginActivity.this,R.color.hint_colorLight));
+                    lblDarkMode.setTextColor(ContextCompat.getColor(LoginActivity.this,R.color.backgroundDark));
+                    edtxMail.setTextColor(ContextCompat.getColor(LoginActivity.this,R.color.backgroundDark));
+                    edtxPassword.setTextColor(ContextCompat.getColor(LoginActivity.this,R.color.backgroundDark));
+                    lblDarkMode.setTextColor(ContextCompat.getColor(LoginActivity.this,R.color.backgroundDark));
                 }
 
             }*/
@@ -93,9 +99,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked)
-                    onCreate(R.layout.activity_main_dark);
+                    onCreate(R.layout.login_activity_dark);
                 else
-                    onCreate(R.layout.activity_main_light);
+                    onCreate(R.layout.login_activity_light);
             }
 
         });
@@ -119,6 +125,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                // startActivity(intent);
             }
         }
+    }
+
+    public boolean onOptionsItemSelected(MenuItem menu){
+        if(menu.getItemId()==android.R.id.home){
+            Log.i("menu","premo indietro");
+            finish();
+            return true;
+        }else{
+            return super.onOptionsItemSelected(menu);
+        }
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return true;
     }
 
     @Override

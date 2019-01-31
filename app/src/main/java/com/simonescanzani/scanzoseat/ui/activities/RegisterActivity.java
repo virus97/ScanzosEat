@@ -1,4 +1,4 @@
-package com.simonescanzani.scanzoseat;
+package com.simonescanzani.scanzoseat.ui.activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,7 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
+
+import com.simonescanzani.scanzoseat.R;
 
 public class RegisterActivity extends AppCompatActivity {
 
