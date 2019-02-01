@@ -15,13 +15,13 @@ import com.simonescanzani.scanzoseat.R;
 import java.util.List;
 
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
+public class RecyclerGridAdapter extends RecyclerView.Adapter<RecyclerGridAdapter.MyViewHolder> {
 
     private Context mContext ;
     private List<Shop> mData ;
 
 
-    public RecyclerViewAdapter(Context mContext, List<Shop> mData) {
+    public RecyclerGridAdapter(Context mContext, List<Shop> mData) {
         this.mContext = mContext;
         this.mData = mData;
     }
@@ -32,15 +32,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         View view ;
         LayoutInflater mInflater = LayoutInflater.from(mContext);
         view = mInflater.inflate(R.layout.cardview_item_shop,parent,false);
+
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-
-        holder.tv_shop_title.setText(mData.get(position).getTitle());
-        holder.img_shop_thumbnail.setImageResource(mData.get(position).getThumbnail());
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            holder.tv_shop_title.setText(mData.get(position).getTitle());
+            holder.img_shop_thumbnail.setImageResource(mData.get(position).getThumbnail());
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -55,9 +55,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             }
         });
-
-
-
     }
 
     @Override
@@ -74,9 +71,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public MyViewHolder(View itemView) {
             super(itemView);
 
-            tv_shop_title = (TextView) itemView.findViewById(R.id.shop_title_id) ;
-            img_shop_thumbnail = (ImageView) itemView.findViewById(R.id.shop_img_id);
-            cardView = (CardView) itemView.findViewById(R.id.cardview_id);
+            tv_shop_title = itemView.findViewById(R.id.shop_title_id) ;
+            img_shop_thumbnail = itemView.findViewById(R.id.shop_img_id);
+            cardView = itemView.findViewById(R.id.cardview_id);
 
 
         }
