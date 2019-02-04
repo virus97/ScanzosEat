@@ -9,24 +9,29 @@
         android:roundIcon="@mipmap/icon_app"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+
         <activity android:name=".ui.activities.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".ui.activities.LoginActivity"
-            android:label="@string/login_activity"/>
-
-        <activity android:name=".ui.activities.RegisterActivity"
-            android:label="@string/register_activity"/>
-
-        <activity android:name=".ui.activities.CheckoutActivity"
-            android:label="@string/checkout_activity"/>
-
-        <activity android:name=".ui.activities.ShopActivity"
-            android:label="@string/shop_activity"/>
+        <activity
+            android:name=".ui.activities.LoginActivity"
+            android:label="@string/login_activity" />
+        <activity
+            android:name=".ui.activities.RegisterActivity"
+            android:label="@string/register_activity" />
+        <activity
+            android:name=".ui.activities.CheckoutActivity"
+            android:theme="@style/BaseAppTheme"
+            android:label="@string/checkout_activity" />
+        <activity
+            android:name=".ui.activities.ShopActivity"
+            android:label="@string/shop_activity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

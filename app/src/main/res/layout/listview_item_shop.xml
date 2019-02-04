@@ -26,12 +26,14 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginLeft="15dp">
 
                 <ImageView
                     android:id="@+id/shop_img_id"
-                    android:layout_width="100dp"
-                    android:layout_height="160dp" />
+                    android:layout_width="160dp"
+                    android:layout_height="170dp"
+                    android:scaleType="centerCrop"/>
 
             </LinearLayout>
 
@@ -46,9 +48,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:textSize="18sp" />
+                    android:textSize="22sp" />
                 <TextView
-                    android:id="@+id/shop_category_id"
+                    android:id="@+id/shop_street_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:padding="5dp"/>
+
+                <TextView
+                    android:id="@+id/shop_min_price_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
