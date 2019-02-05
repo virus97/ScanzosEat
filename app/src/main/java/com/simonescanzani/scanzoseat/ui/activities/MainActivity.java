@@ -18,26 +18,28 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.simonescanzani.scanzoseat.R;
+import com.simonescanzani.scanzoseat.datamodels.Product;
 import com.simonescanzani.scanzoseat.datamodels.Shop;
-import com.simonescanzani.scanzoseat.ui.adapter.RecyclerGridAdapter;
-import com.simonescanzani.scanzoseat.ui.adapter.RecyclerListAdapter;
+import com.simonescanzani.scanzoseat.ui.adapter.RecyclerAdapterShop;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import static com.simonescanzani.scanzoseat.ui.adapter.RecyclerAdapterShop.*;
 
 public class MainActivity extends AppCompatActivity {
-
     ActionBar actionBar;
 
     RecyclerView recyclerView;
+
     ArrayList<Shop> lstShop;
+    List<Product> lstProduct;
 
     FloatingActionButton mFloatingActionButton;
 
-    private RecyclerListAdapter listAdapter;
+    private RecyclerAdapterShop adapter;
 
-    private static boolean grid = true;
 
-    private View ViewLayout;
 
     private final static String GRID_STATE = "GRID_STATE";
 
@@ -46,49 +48,26 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ViewLayout = getLayoutInflater().inflate(R.layout.activity_main, null);
-
         SharedPreferences prefs = getSharedPreferences(GRID_STATE, MODE_PRIVATE);
 
-        grid = prefs.getBoolean(GRID_STATE, true);
+        changeLayout(prefs.getBoolean(GRID_STATE, true));
 
-        setContentView(ViewLayout);
+        setContentView(R.layout.activity_main);
 
         actionBar = getSupportActionBar();
 
-        setData();
+        setProduct();
+        setShop();
+
+        recyclerView = findViewById(R.id.recyclerview_shop);
+        mFloatingActionButton = findViewById(R.id.fab);
 
         setLayout();
 
-    }
-
-    public void setLayout(){
-        if(grid) {
-            setContentView(ViewLayout);
-            recyclerView = findViewById(R.id.recyclerview_shop);
-            mFloatingActionButton = findViewById(R.id.fab);
-
-            RecyclerGridAdapter adapter = new RecyclerGridAdapter(this, lstShop);
-            recyclerView.setAdapter(adapter);
-            GridLayoutManager manager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
-            recyclerView.setLayoutManager(manager);
-        }else{
-            setContentView(ViewLayout);
-            recyclerView = findViewById(R.id.recyclerview_shop);
-            mFloatingActionButton = findViewById(R.id.fab);
-
-            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-            recyclerView.setLayoutManager(layoutManager);
-            listAdapter = new RecyclerListAdapter(lstShop, this);
-            recyclerView.setAdapter(listAdapter);
-
-            //listAdapter.notifyDataSetChanged();
-        }
 
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //startActivity(new Intent(MainActivity.this, CheckoutActivity.class));
                 Intent intent = new Intent(MainActivity.this,CheckoutActivity.class);
                 startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(MainActivity.this).toBundle());
             }
@@ -108,36 +87,64 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void setData(){
-        lstShop = new ArrayList<>();
-        lstShop.add(new Shop("Lu Gulosone","Via Piazza Tevere 98, Rieti",8.0f,R.drawable.pizza_margherita_min));
-        lstShop.add(new Shop("Pianeta Pizza","Viale de Juliis 11, Rieti",10.5f,R.drawable.pizza_boscaiola_min));
-        lstShop.add(new Shop("Il Viale","Viale Maraini snc, Rieti",11.0f,R.drawable.pizza_margherita_min));
-        lstShop.add(new Shop("Da Tito","Via Liberato di Medenetto 20, Rieti",14.0f,R.drawable.pizza_margherita_min));
-        lstShop.add(new Shop("Le Lumiere","Via Cintia 33, Rieti",5.70f,R.drawable.pizza_boscaiola_min));
-        lstShop.add(new Shop("Lu Gulosone","Via Piazza Tevere 98, Rieti",8.0f,R.drawable.pizza_margherita_min));
-        lstShop.add(new Shop("Pianeta Pizza","Viale de Juliis 11, Rieti",10.5f,R.drawable.pizza_boscaiola_min));
-        lstShop.add(new Shop("Il Viale","Viale Maraini snc, Rieti",11.0f,R.drawable.pizza_margherita_min));
-        lstShop.add(new Shop("Da Tito","Via Liberato di Medenetto 20, Rieti",14.0f,R.drawable.pizza_margherita_min));
-        lstShop.add(new Shop("Le Lumiere","Via Cintia 33, Rieti",5.70f,R.drawable.pizza_boscaiola_min));
-        lstShop.add(new Shop("Lu Gulosone","Via Piazza Tevere 98, Rieti",8.0f,R.drawable.pizza_margherita_min));
-        lstShop.add(new Shop("Pianeta Pizza","Viale de Juliis 11, Rieti",10.5f,R.drawable.pizza_boscaiola_min));
-        lstShop.add(new Shop("Il Viale","Viale Maraini snc, Rieti",11.0f,R.drawable.pizza_margherita_min));
-        lstShop.add(new Shop("Da Tito","Via Liberato di Medenetto 20, Rieti",14.0f,R.drawable.pizza_margherita_min));
-        lstShop.add(new Shop("Le Lumiere","Via Cintia 33, Rieti",5.70f,R.drawable.pizza_boscaiola_min));
-        lstShop.add(new Shop("Lu Gulosone","Via Piazza Tevere 98, Rieti",8.0f,R.drawable.pizza_margherita_min));
-        lstShop.add(new Shop("Pianeta Pizza","Viale de Juliis 11, Rieti",10.5f,R.drawable.pizza_boscaiola_min));
-        lstShop.add(new Shop("Il Viale","Viale Maraini snc, Rieti",11.0f,R.drawable.pizza_margherita_min));
-        lstShop.add(new Shop("Da Tito","Via Liberato di Medenetto 20, Rieti",14.0f,R.drawable.pizza_margherita_min));
-        lstShop.add(new Shop("Le Lumiere","Via Cintia 33, Rieti",5.70f,R.drawable.pizza_boscaiola_min));
+    public void setLayout(){
+        if(getLayout()) {
+            adapter = new RecyclerAdapterShop(R.layout.cardview_item,lstShop,this);
+            GridLayoutManager manager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
+            recyclerView.setLayoutManager(manager);
+        }else{
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+            recyclerView.setLayoutManager(layoutManager);
+            adapter = new RecyclerAdapterShop(R.layout.view_item_shop,lstShop,this);
+        }
+        recyclerView.setAdapter(adapter);
+    }
 
+    public void setShop(){
+        lstShop = new ArrayList<>();
+        lstShop.add(new Shop("Lu Gulosone","Via Piazza Tevere 98, Rieti",8.0f,R.drawable.pizza_margherita_min,lstProduct));
+        lstShop.add(new Shop("Pianeta Pizza","Viale de Juliis 11, Rieti",10.5f,R.drawable.pizza_boscaiola_min,lstProduct));
+        lstShop.add(new Shop("Il Viale","Viale Maraini snc, Rieti",11.0f,R.drawable.pizza_margherita_min,lstProduct));
+        lstShop.add(new Shop("Da Tito","Via Liberato di Medenetto 20, Rieti",14.0f,R.drawable.pizza_margherita_min,lstProduct));
+        lstShop.add(new Shop("Le Lumiere","Via Cintia 33, Rieti",5.70f,R.drawable.pizza_boscaiola_min,lstProduct));
+        lstShop.add(new Shop("Lu Gulosone","Via Piazza Tevere 98, Rieti",8.0f,R.drawable.pizza_margherita_min,lstProduct));
+        lstShop.add(new Shop("Pianeta Pizza","Viale de Juliis 11, Rieti",10.5f,R.drawable.pizza_boscaiola_min,lstProduct));
+        lstShop.add(new Shop("Il Viale","Viale Maraini snc, Rieti",11.0f,R.drawable.pizza_margherita_min,lstProduct));
+        lstShop.add(new Shop("Da Tito","Via Liberato di Medenetto 20, Rieti",14.0f,R.drawable.pizza_margherita_min,lstProduct));
+        lstShop.add(new Shop("Le Lumiere","Via Cintia 33, Rieti",5.70f,R.drawable.pizza_boscaiola_min,lstProduct));
+        lstShop.add(new Shop("Lu Gulosone","Via Piazza Tevere 98, Rieti",8.0f,R.drawable.pizza_margherita_min,lstProduct));
+        lstShop.add(new Shop("Pianeta Pizza","Viale de Juliis 11, Rieti",10.5f,R.drawable.pizza_boscaiola_min,lstProduct));
+        lstShop.add(new Shop("Il Viale","Viale Maraini snc, Rieti",11.0f,R.drawable.pizza_margherita_min,lstProduct));
+        lstShop.add(new Shop("Da Tito","Via Liberato di Medenetto 20, Rieti",14.0f,R.drawable.pizza_margherita_min,lstProduct));
+        lstShop.add(new Shop("Le Lumiere","Via Cintia 33, Rieti",5.70f,R.drawable.pizza_boscaiola_min,lstProduct));
+        lstShop.add(new Shop("Lu Gulosone","Via Piazza Tevere 98, Rieti",8.0f,R.drawable.pizza_margherita_min,lstProduct));
+        lstShop.add(new Shop("Pianeta Pizza","Viale de Juliis 11, Rieti",10.5f,R.drawable.pizza_boscaiola_min,lstProduct));
+        lstShop.add(new Shop("Il Viale","Viale Maraini snc, Rieti",11.0f,R.drawable.pizza_margherita_min,lstProduct));
+        lstShop.add(new Shop("Da Tito","Via Liberato di Medenetto 20, Rieti",14.0f,R.drawable.pizza_margherita_min,lstProduct));
+        lstShop.add(new Shop("Le Lumiere","Via Cintia 33, Rieti",5.70f,R.drawable.pizza_boscaiola_min,lstProduct));
+
+    }
+
+    public void setProduct(){
+        lstProduct = new ArrayList<Product>();
+        lstProduct.add(new Product("Margherita","Acqua e Farina",5.0f, R.drawable.pizza_margherita_min));
+        lstProduct.add(new Product("Boscaiola","Acqua e Farina",7.0f, R.drawable.pizza_boscaiola_min));
+        lstProduct.add(new Product("Norcina","Acqua e Farina",6.0f, R.drawable.pizza_margherita_min));
+        lstProduct.add(new Product("Diavola","Acqua e Farina",8.0f, R.drawable.pizza_margherita_min));
+        lstProduct.add(new Product("Caprese","Acqua e Farina",5.5f, R.drawable.pizza_boscaiola_min));
+        lstProduct.add(new Product("Alici e Tonno","Acqua e Farina",7.5f, R.drawable.pizza_margherita_min));
+        lstProduct.add(new Product("Quattro Stagioni","Acqua e Farina",5.0f, R.drawable.pizza_boscaiola_min));
+        lstProduct.add(new Product("Deppiù","Acqua e Farina",9.0f, R.drawable.pizza_margherita_min));
+        lstProduct.add(new Product("Quattro Formaggi","Acqua e Farina",10.5f, R.drawable.pizza_margherita_min));
+        lstProduct.add(new Product("Gorgonzola","Acqua e Farina",11.0f, R.drawable.pizza_boscaiola_min));
+        lstProduct.add(new Product("Wurstel","Acqua e Farina",10.2f, R.drawable.pizza_margherita_min));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
-        if (!grid) {
+        if (!getLayout()) {
             menu.findItem(R.id.change_layout).setIcon(R.drawable.ic_grid_view);
         }
         return true;
@@ -149,11 +156,11 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, LoginActivity.class));
             return true;
         } else if (item.getItemId() == (R.id.change_layout)) {
-            grid = !grid;
+            changeLayout(!getLayout());
             SharedPreferences.Editor editor = getSharedPreferences(GRID_STATE, MODE_PRIVATE).edit();
-            editor.putBoolean(GRID_STATE,grid);
+            editor.putBoolean(GRID_STATE, getLayout());
             editor.apply();
-            if(grid)
+            if(getLayout())
                 item.setIcon(R.drawable.ic_list_view);
             else
                 item.setIcon(R.drawable.ic_grid_view);

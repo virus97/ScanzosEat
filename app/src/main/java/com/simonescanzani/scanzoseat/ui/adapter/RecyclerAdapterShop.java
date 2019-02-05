@@ -1,6 +1,5 @@
 package com.simonescanzani.scanzoseat.ui.adapter;
 
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -14,21 +13,23 @@ import android.widget.TextView;
 
 import com.simonescanzani.scanzoseat.R;
 import com.simonescanzani.scanzoseat.datamodels.Shop;
-import com.simonescanzani.scanzoseat.ui.activities.MainActivity;
 import com.simonescanzani.scanzoseat.ui.activities.ShopActivity;
 
 import java.util.ArrayList;
 
-public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapter.ListLayoutHolder> {
+public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterShop.ListLayoutHolder> {
 
     private ArrayList<Shop> shoplist;
     private Context mContext;
+    private int idVista;
+    private static boolean grid = true;
 
 
 
-    public RecyclerListAdapter(ArrayList<Shop> contactsList, Context context) {
+    public RecyclerAdapterShop(int idVista, ArrayList<Shop> contactsList, Context context) {
         this.shoplist = contactsList;
         this.mContext = context;
+        this.idVista=idVista;
     }
 
 
@@ -38,7 +39,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
 
         // Inflate the layout view you have created for the list rows here
-        View view = layoutInflater.inflate(R.layout.listview_item_shop, parent, false);
+        View view = layoutInflater.inflate(idVista, parent, false);
         return new ListLayoutHolder(view);
     }
 
@@ -51,10 +52,11 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
     @Override
     public void onBindViewHolder(@NonNull ListLayoutHolder holder, final int position) {
         final Shop shop = shoplist.get(position);
-
         holder.setTitle(shop.getTitle());
-        holder.setStreet(shop.getStreet());
-        holder.setMinPrice(shop.getMinPrice());
+        if(!grid) {
+            holder.setStreet(shop.getStreet());
+            holder.setMinPrice(shop.getMinPrice());
+        }
         holder.setThumbnail(shop.getThumbnail());
 
     }
@@ -71,10 +73,12 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         public ListLayoutHolder(View itemView) {
             super(itemView);
 
-            txtTitle = itemView.findViewById(R.id.shop_title_id);
-            txtStreet = itemView.findViewById(R.id.shop_street_id);
-            txtMinPrice =itemView.findViewById(R.id.shop_min_price_id);
-            imgShop = itemView.findViewById(R.id.shop_img_id);
+            txtTitle = itemView.findViewById(R.id.title_id);
+            if(!grid) {
+                txtStreet = itemView.findViewById(R.id.description_id);
+                txtMinPrice = itemView.findViewById(R.id.description1_id);
+            }
+            imgShop = itemView.findViewById(R.id.img_id);
             cardView = itemView.findViewById(R.id.cardview_id);
 
             cardView.setOnClickListener(this);
@@ -97,6 +101,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
             imgShop.setImageResource(thumbnail);
         }
 
+
         @Override
         public void onClick(View v) {
             if(v.getId()== R.id.cardview_id){
@@ -113,5 +118,13 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
                 mContext.startActivity(intent);
             }
         }
+    }
+
+    public static void changeLayout(boolean layout){
+        grid=layout;
+    }
+
+    public static boolean getLayout(){
+        return grid;
     }
 }

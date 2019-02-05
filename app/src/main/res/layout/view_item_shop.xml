@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -30,7 +29,7 @@
                 android:layout_marginLeft="15dp">
 
                 <ImageView
-                    android:id="@+id/shop_img_id"
+                    android:id="@+id/img_id"
                     android:layout_width="160dp"
                     android:layout_height="170dp"
                     android:scaleType="centerCrop"/>
@@ -44,30 +43,30 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/shop_title_id"
-                    android:layout_width="match_parent"
+                    android:id="@+id/title_id"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:textSize="22sp" />
                 <TextView
-                    android:id="@+id/shop_street_id"
+                    android:id="@+id/description_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
                     android:padding="5dp"/>
 
                 <TextView
-                    android:id="@+id/shop_min_price_id"
+                    android:id="@+id/description1_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
                     android:padding="5dp"/>
+
 
             </LinearLayout>
 
 
         </LinearLayout>
-
 
 
     </android.support.v7.widget.CardView>

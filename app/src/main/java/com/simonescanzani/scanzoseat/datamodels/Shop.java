@@ -1,5 +1,7 @@
 package com.simonescanzani.scanzoseat.datamodels;
 
+import java.util.List;
+
 public class Shop {
 
     private String Title;
@@ -7,14 +9,17 @@ public class Shop {
     private float minPrice;
     private int Thumbnail ;
 
+    private List<Product> listProduct;
+
     public Shop() {
     }
 
-    public Shop(String title, String street, float minPrice, int thumbnail) {
+    public Shop(String title, String street, float minPrice, int thumbnail, List<Product> listProduct) {
         Title = title;
         Street = street;
         this.minPrice = minPrice;
         Thumbnail = thumbnail;
+        this.listProduct=listProduct;
     }
 
 
@@ -27,7 +32,7 @@ public class Shop {
     }
 
     public String getMinPrice() {
-        return "Prezzo Minimo: "+minPrice+ "€";
+        return "Spesa Minima: "+minPrice+ "€";
     }
 
     public int getThumbnail() {
@@ -49,5 +54,13 @@ public class Shop {
 
     public void setThumbnail(int thumbnail) {
         Thumbnail = thumbnail;
+    }
+
+    public List<Product> getListProduct() {
+        return listProduct;
+    }
+
+    public void setListProduct(List<Product> listProduct) {
+        this.listProduct = listProduct;
     }
 }

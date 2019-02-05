@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:fitsSystemWindows="true"
     tools:context=".ui.activities.ShopActivity">
 
@@ -42,7 +42,9 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_shop" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_shop" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -53,4 +55,14 @@
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@android:drawable/ic_dialog_map" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="10"
+        app:layout_anchor="@+id/include"
+        app:layout_anchorGravity="bottom"/>
+
 </android.support.design.widget.CoordinatorLayout>
+
