@@ -112,7 +112,7 @@ public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterSho
 
                 intent.putExtra("Title",item.getTitle());
                 intent.putExtra("Street",item.getStreet());
-                intent.putExtra("MinPrice",item.getMinPrice());
+                intent.putExtra("MinPrice",item.getMinPriceNumber());
                 intent.putExtra("Thumbnail",item.getThumbnail());
                 // start the activity
                 mContext.startActivity(intent);

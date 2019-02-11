@@ -8,9 +8,12 @@
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>
     <color name="icons">#FFFFFF</color>
+    <color name="card_view">#FCFCFC</color>
     <color name="divider">#BDBDBD</color>
     <color name="backgroundDark">#303030</color>
     <color name="backgroundLight">#FFFFFF</color>
     <color name="hint_colorLight">#A9A9A9</color>
     <color name="viewBg">#f1f5f8</color>
+    <color name="progress_start">#F44336</color>
+    <color name="progress_end">#4CAF50</color>
 </resources>

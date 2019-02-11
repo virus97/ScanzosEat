@@ -7,6 +7,7 @@ public class Product implements Serializable {
     private String nome;
     private String ingredienti;
     private int Thumbnail ;
+    private int quantity = 0;
 
     public Product(String nome, String ingredienti, float prezzo, int Thumbnail){
         this.nome=nome;
@@ -17,6 +18,10 @@ public class Product implements Serializable {
 
     public String getPrezzo() {
         return "Prezzo: " + prezzo + " €";
+    }
+
+    public float getPrezzoNumber(){
+        return prezzo;
     }
 
     public void setPrezzo(float prezzo) {
@@ -45,5 +50,22 @@ public class Product implements Serializable {
 
     public void setThumbnail(int thumbnail) {
         Thumbnail = thumbnail;
+    }
+
+    public int getQuantity() {
+        return this.quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void increseQuantity(){
+        this.quantity++;
+    }
+
+    public void decreaseQuantity(){
+        if(this.quantity!=0)
+            this.quantity--;
     }
 }

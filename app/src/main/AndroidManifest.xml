@@ -26,7 +26,6 @@
             android:label="@string/register_activity" />
         <activity
             android:name=".ui.activities.CheckoutActivity"
-            android:theme="@style/BaseAppTheme"
             android:label="@string/checkout_activity" />
         <activity
             android:name=".ui.activities.ShopActivity"

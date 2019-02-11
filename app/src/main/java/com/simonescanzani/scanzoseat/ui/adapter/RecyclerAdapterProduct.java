@@ -4,14 +4,12 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.simonescanzani.scanzoseat.R;
@@ -23,12 +21,29 @@ public class RecyclerAdapterProduct extends RecyclerView.Adapter<RecyclerAdapter
 
     private ArrayList<Product> productlist;
     private Context mContext;
+    private float minPrice;
 
 
-    public RecyclerAdapterProduct(ArrayList<Product> contactsList, Context context) {
+    public RecyclerAdapterProduct(ArrayList<Product> contactsList, float minPrice, Context context) {
         this.productlist = contactsList;
         this.mContext = context;
+        this.minPrice=minPrice;
     }
+
+    public RecyclerAdapterProduct.onQuantityChangedListener getOnQuantityChangedListener() {
+        return onQuantityChangedListener;
+    }
+
+    public void setOnQuantityChangedListener(RecyclerAdapterProduct.onQuantityChangedListener onQuantityChangedListener) {
+        this.onQuantityChangedListener = onQuantityChangedListener;
+    }
+
+    public interface onQuantityChangedListener{
+        void onChange(float price);
+    }
+
+    private onQuantityChangedListener onQuantityChangedListener;
+
 
 
     @Override
@@ -53,6 +68,7 @@ public class RecyclerAdapterProduct extends RecyclerView.Adapter<RecyclerAdapter
         holder.setIngredienti(product.getIngredienti());
         holder.setPrice(product.getPrezzo());
         holder.setThumbnail(product.getThumbnail());
+        holder.setQuantity(product.getQuantity());
     }
 
 
@@ -63,7 +79,6 @@ public class RecyclerAdapterProduct extends RecyclerView.Adapter<RecyclerAdapter
         private TextView txtPrice;
         private ImageView imgProduct;
         private CardView cardView ;
-        private ProgressBar progressBar;
         private Button btnIncrementa, btnDecrementa;
         private EditText edtxQuantity;
 
@@ -75,7 +90,6 @@ public class RecyclerAdapterProduct extends RecyclerView.Adapter<RecyclerAdapter
             txtPrice =itemView.findViewById(R.id.description1_id);
             imgProduct = itemView.findViewById(R.id.img_id);
             cardView = itemView.findViewById(R.id.cardview_id);
-            progressBar = itemView.findViewById(R.id.progressBar);
             btnDecrementa = itemView.findViewById(R.id.btnRimuovi);
             btnIncrementa = itemView.findViewById(R.id.btnAggiungi);
             edtxQuantity = itemView.findViewById(R.id.edtxQuantity);
@@ -102,16 +116,23 @@ public class RecyclerAdapterProduct extends RecyclerView.Adapter<RecyclerAdapter
             imgProduct.setImageResource(thumbnail);
         }
 
+        public void setQuantity(int quantity){
+            edtxQuantity.setText(String.valueOf(quantity));
+        }
+
         @Override
         public void onClick(View v) {
+            Product product = productlist.get(getAdapterPosition());
             if(v.getId()== R.id.btnAggiungi){
-                edtxQuantity.setText(String.valueOf(Integer.parseInt(edtxQuantity.getText().toString())+1));
-                Log.i("button", "+");
+                product.increseQuantity();
+                onQuantityChangedListener.onChange(product.getPrezzoNumber());
+                notifyItemChanged(getAdapterPosition());
             } else if (v.getId()==R.id.btnRimuovi){
-                if(Integer.parseInt((edtxQuantity.getText().toString()))!=0){
-                    edtxQuantity.setText(String.valueOf(Integer.parseInt(edtxQuantity.getText().toString())-1));
+                if(product.getQuantity()!=0) {
+                    product.decreaseQuantity();
+                    onQuantityChangedListener.onChange(product.getPrezzoNumber() * -1);
+                    notifyItemChanged(getAdapterPosition());
                 }
-                Log.i("button", "-");
             }
         }
     }

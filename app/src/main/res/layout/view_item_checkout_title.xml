@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/riepilogo_ordine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Riepilogo Ordine"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:padding="15sp"/>
+
+    <TextView
+        android:id="@+id/txtShopTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="La Fraschetta"
+        android:textSize="18sp"
+        android:layout_marginStart="15sp"/>
+
+    <TextView
+        android:id="@+id/txtStreet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Via le mani dal naso"
+        android:layout_marginStart="15sp"/>
+
+</LinearLayout>
