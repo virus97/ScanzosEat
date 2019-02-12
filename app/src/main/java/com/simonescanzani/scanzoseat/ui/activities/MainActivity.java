@@ -12,15 +12,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.simonescanzani.scanzoseat.R;
 import com.simonescanzani.scanzoseat.datamodels.Product;
 import com.simonescanzani.scanzoseat.datamodels.Shop;
 import com.simonescanzani.scanzoseat.ui.adapter.RecyclerAdapterShop;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +38,8 @@ import java.util.List;
 import static com.simonescanzani.scanzoseat.ui.adapter.RecyclerAdapterShop.*;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     ActionBar actionBar;
 
     RecyclerView recyclerView;
@@ -56,13 +68,46 @@ public class MainActivity extends AppCompatActivity {
 
         actionBar = getSupportActionBar();
 
-        setProduct();
-        setShop();
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "http://5ba19290ee710f0014dd764c.mockapi.io/api/v1/restaurant";
+
+        // Request a string response from the provided URL.
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d(TAG, response);
+
+                        //Start Parsing
+                        try {
+                            lstShop = new ArrayList<>();
+                            JSONArray jsonArray = new JSONArray(response);
+                            for(int i=0; i<jsonArray.length(); i++){
+                                Shop shop = new Shop(jsonArray.getJSONObject(i));
+                                lstShop.add(shop);
+                                setLayout();
+                            }
+                            adapter.setData(lstShop);
+                        }catch (JSONException ex){
+                            ex.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, error.getMessage());
+                    }
+                });
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+
 
         recyclerView = findViewById(R.id.recyclerview_shop);
         mFloatingActionButton = findViewById(R.id.fab);
-
-        setLayout();
 
 
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {

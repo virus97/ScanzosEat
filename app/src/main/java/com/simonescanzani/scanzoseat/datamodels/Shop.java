@@ -1,12 +1,16 @@
 package com.simonescanzani.scanzoseat.datamodels;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Shop {
 
     private String Title;
     private String Street ;
     private float minPrice;
     private int Thumbnail ;
+    private String image_url;
 
 
     public Shop() {
@@ -17,6 +21,18 @@ public class Shop {
         Street = street;
         this.minPrice = minPrice;
         Thumbnail = thumbnail;
+    }
+
+
+    public Shop(JSONObject jsonShop){
+        try {
+            this.Title = jsonShop.getString("name");
+            this.Street = jsonShop.getString("address");
+            this.minPrice = Float.valueOf(jsonShop.getString("min_order"));
+            this.image_url = jsonShop.getString("image_url");
+        }catch (JSONException ex){
+            ex.getStackTrace();
+        }
     }
 
 
@@ -38,6 +54,14 @@ public class Shop {
 
     public int getThumbnail() {
         return Thumbnail;
+    }
+
+    public String getImage_url(){
+        return image_url;
+    }
+
+    public void setImage_url(String img){
+        this.image_url=img;
     }
 
 

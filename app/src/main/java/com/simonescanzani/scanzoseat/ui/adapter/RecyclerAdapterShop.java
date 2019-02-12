@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.RequestManager;
 import com.simonescanzani.scanzoseat.R;
 import com.simonescanzani.scanzoseat.datamodels.Shop;
 import com.simonescanzani.scanzoseat.ui.activities.ShopActivity;
@@ -48,6 +51,11 @@ public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterSho
         return shoplist == null? 0: shoplist.size();
     }
 
+    public void setData(ArrayList<Shop> data){
+        this.shoplist = data;
+    }
+
+
 
     @Override
     public void onBindViewHolder(@NonNull ListLayoutHolder holder, final int position) {
@@ -57,7 +65,8 @@ public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterSho
             holder.setStreet(shop.getStreet());
             holder.setMinPrice(shop.getMinPrice());
         }
-        holder.setThumbnail(shop.getThumbnail());
+        //holder.setThumbnail(shop.getThumbnail());
+        holder.setImage(shop.getImage_url());
 
     }
 
@@ -101,6 +110,12 @@ public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterSho
             imgShop.setImageResource(thumbnail);
         }
 
+        public void setImage(String img){
+            RequestManager requestManager = Glide.with(mContext);
+            RequestBuilder requestBuilder = requestManager.load(img);
+            requestBuilder.into(imgShop);
+        }
+
 
         @Override
         public void onClick(View v) {
@@ -113,7 +128,7 @@ public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterSho
                 intent.putExtra("Title",item.getTitle());
                 intent.putExtra("Street",item.getStreet());
                 intent.putExtra("MinPrice",item.getMinPriceNumber());
-                intent.putExtra("Thumbnail",item.getThumbnail());
+                intent.putExtra("Thumbnail",item.getImage_url());
                 // start the activity
                 mContext.startActivity(intent);
             }

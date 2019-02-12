@@ -19,6 +19,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.RequestManager;
 import com.simonescanzani.scanzoseat.R;
 import com.simonescanzani.scanzoseat.datamodels.Product;
 import com.simonescanzani.scanzoseat.ui.adapter.RecyclerAdapterProduct;
@@ -68,7 +71,8 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
         Title = intent.getExtras().getString("Title");
         Street = intent.getExtras().getString("Street");
         MinPrice = intent.getExtras().getFloat("MinPrice");
-        int image = intent.getExtras().getInt("Thumbnail") ;
+        //int image = intent.getExtras().getInt("Thumbnail") ;
+        String imageURL = intent.getExtras().getString("Thumbnail");
 
         progressBar.setMax((int)(MinPrice*100));
 
@@ -89,7 +93,10 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
         setTitle(Title);
 
         img = findViewById(R.id.expandedImage);
-        img.setImageResource(image);
+        //img.setImageResource(image);
+        RequestManager requestManager = Glide.with(this);
+        RequestBuilder requestBuilder = requestManager.load(imageURL);
+        requestBuilder.into(img);
 
         btnCheckOut.setOnClickListener(new View.OnClickListener() {
             @Override
