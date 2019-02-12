@@ -1,6 +1,8 @@
 package com.simonescanzani.scanzoseat.ui.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -150,10 +152,26 @@ public class RecyclerAdapterCheckout extends RecyclerView.Adapter {
         @Override
         public void onClick(View v) {
             if (v.getId() == R.id.btnRemove) {
-                onItemRemovedListener.onItemRemoved(orderList.get(getAdapterPosition()-CONT_PRE_ORDER).getPrezzoNumber(), orderList.get(getAdapterPosition()-CONT_PRE_ORDER).getQuantity());
-                orderList.remove(getAdapterPosition()-CONT_PRE_ORDER);
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setMessage("Vuoi veramente cancellare il prodotto?");
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        onItemRemovedListener.onItemRemoved(orderList.get(getAdapterPosition()-CONT_PRE_ORDER).getPrezzoNumber(), orderList.get(getAdapterPosition()-CONT_PRE_ORDER).getQuantity());
+                        orderList.remove(getAdapterPosition()-CONT_PRE_ORDER);
+                        notifyItemRemoved(getAdapterPosition());
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.create().show();
             }
-            notifyItemRemoved(getAdapterPosition());
+
         }
     }
 
