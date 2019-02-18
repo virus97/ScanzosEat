@@ -1,7 +1,6 @@
 package com.simonescanzani.scanzoseat.ui.activities;
 
 import android.app.ActivityOptions;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -21,12 +20,9 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+
 import com.simonescanzani.scanzoseat.R;
 import com.simonescanzani.scanzoseat.datamodels.Product;
 import com.simonescanzani.scanzoseat.datamodels.Shop;
@@ -35,7 +31,6 @@ import com.simonescanzani.scanzoseat.ui.adapter.RecyclerAdapterShop;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +60,9 @@ public class MainActivity extends AppCompatActivity implements  Response.Listene
     private final static String GRID_STATE = "GRID_STATE";
     private final static String PREF_NAME= "Preferences";
 
+    private static final String ACCOUNT_NAME = "ACCOUNT_CREDENTIAL";
+    private static final String JWT = "JWT";
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,49 +76,11 @@ public class MainActivity extends AppCompatActivity implements  Response.Listene
 
         actionBar = getSupportActionBar();
 
-        spinner=(ProgressBar)findViewById(R.id.progressBar);
+        spinner = findViewById(R.id.progressBar);
         spinner.setVisibility(View.GONE);
         spinner.setVisibility(View.VISIBLE);
 
-/*
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://5ba19290ee710f0014dd764c.mockapi.io/api/v1/restaurant";
 
-        // Request a string response from the provided URL.
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d(TAG, response);
-
-                        //Start Parsing
-                        try {
-                            lstShop = new ArrayList<>();
-                            //JSONArray jsonArray = new JSONArray(response);
-                            JSONArray jsonArray = new JSONObject(response).getJSONArray("data");
-                            for(int i=0; i<jsonArray.length(); i++){
-                                Shop shop = new Shop(jsonArray.getJSONObject(i));
-                                lstShop.add(shop);
-                            }
-                            setLayout();
-                            adapter.setData(lstShop);
-                        }catch (JSONException ex){
-                            ex.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener(){
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, error.getMessage());
-                    }
-                });
-
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);
-*/
         restController = new RestController(this);
         restController.getRequest(Shop.ENDPOINT, this, this);
 
@@ -218,8 +178,14 @@ public class MainActivity extends AppCompatActivity implements  Response.Listene
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.login_menu) {
-            startActivity(new Intent(this, LoginActivity.class));
-            return true;
+            SharedPreferences prefsAccount = getSharedPreferences(ACCOUNT_NAME, MODE_PRIVATE);
+            if(prefsAccount.getString(JWT, "")!=""){
+                startActivity(new Intent(this, AccountActivity.class));
+                return true;
+            }else {
+                startActivity(new Intent(this, LoginActivity.class));
+                return true;
+            }
         } else if (item.getItemId() == (R.id.change_layout)) {
             changeLayout(!getLayout());
             SharedPreferences.Editor editor = getSharedPreferences(PREF_NAME, MODE_PRIVATE).edit();

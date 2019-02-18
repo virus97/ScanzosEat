@@ -33,6 +33,9 @@
             android:name=".ui.activities.ShopActivity"
             android:label="@string/shop_activity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.activities.AccountActivity"
+            android:label="Account"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

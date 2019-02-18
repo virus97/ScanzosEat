@@ -8,15 +8,12 @@ import android.widget.Toast;
 public class Utilities {
     public static boolean doLogin(Context context, String email, String password, int LEN_PASS){
         if(!isEmailValid(email)) {
-            showToast(context,R.string.email_invalid);
             return false;
         }
         if(!isPasswordValid(password, LEN_PASS)){
-            showToast(context,R.string.password_invalid);
             return false;
         }
 
-        showToast(context,R.string.credential_ok);
         return true;
     }
 

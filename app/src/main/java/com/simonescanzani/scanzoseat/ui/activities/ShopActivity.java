@@ -1,9 +1,12 @@
 package com.simonescanzani.scanzoseat.ui.activities;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -66,6 +69,11 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
     private RestController restController;
     private ProgressBar spinner;
 
+    private static final String ACCOUNT_NAME = "ACCOUNT_CREDENTIAL";
+    private static final String JWT = "JWT";
+
+    private static final int REQUEST_CODE = 2001;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +81,6 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
         ViewLayout = getLayoutInflater().inflate(R.layout.activity_shop, null);
 
         //setProduct();
-
 
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
 
@@ -128,8 +135,14 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
         btnCheckOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ShopActivity.this, CheckoutActivity.class);
-                startActivity(intent);
+                SharedPreferences prefsAccount = getSharedPreferences(ACCOUNT_NAME, MODE_PRIVATE);
+                if(!(prefsAccount.getString(JWT, "").equals(""))) {
+                    Intent intent = new Intent(ShopActivity.this, CheckoutActivity.class);
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(ShopActivity.this, LoginActivity.class);
+                    startActivityForResult(intent,REQUEST_CODE);
+                }
             }
         });
 
@@ -222,9 +235,48 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
             mapIntent.setPackage("com.google.android.apps.maps");
             startActivity(mapIntent);
             return true;
+        }else if(id == R.id.action_login){
+            SharedPreferences prefsAccount = getSharedPreferences(ACCOUNT_NAME, MODE_PRIVATE);
+
+            if(!(prefsAccount.getString(JWT, "").equals(""))){
+                Intent intent = new Intent(this, AccountActivity.class);
+                startActivity(intent);
+            } else{
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivityForResult(intent, REQUEST_CODE);
+            }
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        //super.onActivityResult(requestCode, resultCode, data);
+
+        Log.d("ciaone", "requestCode " + requestCode);
+        Log.d("ciaone", "resultCode " + resultCode);
+
+        if(requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK){
+            //TODO login is successful
+            menu.findItem(R.id.action_login).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    Intent intent = new Intent(ShopActivity.this, AccountActivity.class);
+                    startActivity(intent);
+                    return true;
+                }
+            });
+
+            btnCheckOut.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(ShopActivity.this, CheckoutActivity.class));
+                }
+            });
+        }
+
     }
 
     private void hideOption(int id) {

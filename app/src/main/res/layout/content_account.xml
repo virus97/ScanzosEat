@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ui.activities.AccountActivity"
+    tools:showIn="@layout/activity_account"
+    app:layout_anchorGravity="top">
+
+
+    <LinearLayout
+        android:id="@+id/linear"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginBottom="15sp">
+
+        <TextView
+            android:id="@+id/txtProdotti"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="30sp"
+            android:padding="20sp"
+            android:textStyle="bold"
+            android:text="Account" />
+
+        <Button
+            android:id="@+id/btnEsci"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ESCI"/>
+
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

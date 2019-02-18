@@ -1,7 +1,9 @@
 package com.simonescanzani.scanzoseat.ui.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -56,6 +58,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     StateRequest stateRequest = StateRequest.UNCHECKED;
 
     public final Context context = this;
+
+    private static final String ACCOUNT_NAME = "ACCOUNT_CREDENTIAL";
+    private static final String USERNAME = "USERNAME";
+    private static final String EMAIL = "EMAIL";
+    private static final String JWT = "JWT";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -116,13 +123,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         if(v.getId()==R.id.buttonLogin) {
-            Log.i("Button", "Login premuto");
             if(Utilities.doLogin(this, edtxMail.getText().toString(),edtxPassword.getText().toString(), LEN_PASS)){
                 btnLogin.setEnabled(false);
                 spinner.setVisibility(View.VISIBLE);
                 Map<String,String> params = new HashMap<>();
                 params.put("identifier",edtxMail.getText().toString());
-                params.put("password",edtxMail.getText().toString());
+                params.put("password",edtxPassword.getText().toString());
                 restController.postRequest("/auth/local", this, this, params);
                 if(stateRequest==StateRequest.TRUE || stateRequest==StateRequest.FALSE) {
                     spinner.setVisibility(View.GONE);
@@ -188,13 +194,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onResponse(String response) {
         try {
             //JSONArray jsonArray = new JSONArray(response);
-            JSONObject json = new JSONObject(response).getJSONObject("user");
-            Log.i("rispostaTotale",response);
-            Log.i("jsonRisposta", json.toString());
+            JSONObject jsonRisposta = new JSONObject(response);
+            String jwt = jsonRisposta.get("jwt").toString();
+            JSONObject json = jsonRisposta.getJSONObject("user");
             if(json.getString("confirmed").equals("true")){
                 Toast.makeText(LoginActivity.this, "Confermato!", Toast.LENGTH_SHORT).show();
                 stateRequest = StateRequest.TRUE;
                 spinner.setVisibility(View.GONE);
+
+                SharedPreferences.Editor editor = getSharedPreferences(ACCOUNT_NAME, MODE_PRIVATE).edit();
+                editor.putString(USERNAME, json.getString("username"));
+                editor.putString(EMAIL, json.getString("email"));
+                editor.putString(JWT, jwt);
+                editor.apply();
+
+                setResult(Activity.RESULT_OK);
+                finish();
+
+                /*Intent intent = new Intent(LoginActivity.this, AccountActivity.class);
+                startActivity(intent);*/
             }else{
                 stateRequest = StateRequest.FALSE;
                 Toast.makeText(LoginActivity.this, "Problema!", Toast.LENGTH_SHORT).show();

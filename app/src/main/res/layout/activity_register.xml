@@ -37,13 +37,13 @@
             android:inputType="textPassword"/>
 
         <EditText
-            android:id="@+id/edtxNumberPhone"
+            android:id="@+id/edtxUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="32dp"
             android:gravity="center"
-            android:hint="@string/insert_cell"
+            android:hint="@string/insert_username"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
             android:inputType="textPersonName"/>

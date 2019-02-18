@@ -16,6 +16,13 @@
         app:showAsAction="ifRoom"
         android:icon="@android:drawable/ic_dialog_map"/>
 
+    <item
+        android:id="@+id/action_login"
+        android:orderInCategory="200"
+        android:title="info"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_user_profile"/>
+
 
 
 </menu>

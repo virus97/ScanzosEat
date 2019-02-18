@@ -70,12 +70,12 @@
 
         <ProgressBar
             android:id="@+id/progressBarLoading"
+            style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="30sp"
-            android:visibility="gone"
-            style="?android:attr/progressBarStyleLarge"/>
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/lblDarkMode"
