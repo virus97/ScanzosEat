@@ -11,6 +11,8 @@ public class Shop {
     private float minPrice;
     private int Thumbnail ;
     private String image_url;
+    private String id;
+    public final static String ENDPOINT = "/restaurants";
 
 
     public Shop() {
@@ -28,8 +30,10 @@ public class Shop {
         try {
             this.Title = jsonShop.getString("name");
             this.Street = jsonShop.getString("address");
-            this.minPrice = Float.valueOf(jsonShop.getString("min_order"));
+            this.minPrice = (float)jsonShop.getDouble("min_order");
+            //this.minPrice = Float.valueOf(jsonShop.getString("min_order"));
             this.image_url = jsonShop.getString("image_url");
+            this.id = jsonShop.getString("id");
         }catch (JSONException ex){
             ex.getStackTrace();
         }
@@ -79,5 +83,13 @@ public class Shop {
 
     public void setThumbnail(int thumbnail) {
         Thumbnail = thumbnail;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

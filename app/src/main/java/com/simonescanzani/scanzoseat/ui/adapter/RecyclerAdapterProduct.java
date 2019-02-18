@@ -12,8 +12,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.RequestManager;
 import com.simonescanzani.scanzoseat.R;
 import com.simonescanzani.scanzoseat.datamodels.Product;
+import com.simonescanzani.scanzoseat.datamodels.Shop;
 
 import java.util.ArrayList;
 
@@ -54,6 +58,11 @@ public class RecyclerAdapterProduct extends RecyclerView.Adapter<RecyclerAdapter
         return new ListLayoutHolder(view);
     }
 
+    public void setData(ArrayList<Product> data){
+        this.productlist = data;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
         return productlist == null? 0: productlist.size();
@@ -67,7 +76,7 @@ public class RecyclerAdapterProduct extends RecyclerView.Adapter<RecyclerAdapter
         holder.setTitle(product.getNome());
         holder.setIngredienti(product.getIngredienti());
         holder.setPrice(product.getPrezzo());
-        holder.setThumbnail(product.getThumbnail());
+        holder.setImage(product.getImage_url());
         holder.setQuantity(product.getQuantity());
     }
 
@@ -118,6 +127,12 @@ public class RecyclerAdapterProduct extends RecyclerView.Adapter<RecyclerAdapter
 
         public void setQuantity(int quantity){
             edtxQuantity.setText(String.valueOf(quantity));
+        }
+
+        public void setImage(String img){
+            RequestManager requestManager = Glide.with(mContext);
+            RequestBuilder requestBuilder = requestManager.load(img);
+            requestBuilder.into(imgProduct);
         }
 
         @Override

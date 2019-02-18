@@ -68,6 +68,15 @@
         android:gravity="bottom|end"
         android:orientation="vertical">
 
+        <ProgressBar
+            android:id="@+id/progressBarLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="30sp"
+            android:visibility="gone"
+            style="?android:attr/progressBarStyleLarge"/>
+
         <TextView
             android:id="@+id/lblDarkMode"
             android:layout_width="wrap_content"

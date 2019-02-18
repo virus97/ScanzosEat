@@ -29,6 +29,10 @@ public class Utilities {
         return Patterns.PHONE.matcher(number).matches();
     }
 
+    public static boolean isUserNameValid(CharSequence username){
+        return username.length()>6;
+    }
+
     public static boolean isPasswordValid(CharSequence pass, int LEN_PASS){
         return pass.length()>LEN_PASS;
     }

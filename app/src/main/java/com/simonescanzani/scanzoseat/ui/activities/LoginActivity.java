@@ -1,5 +1,6 @@
 package com.simonescanzani.scanzoseat.ui.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -14,14 +15,25 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.simonescanzani.scanzoseat.R;
 import com.simonescanzani.scanzoseat.Utilities;
+import com.simonescanzani.scanzoseat.services.RestController;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, Response.Listener<String>, Response.ErrorListener {
 
     LinearLayout currentLayout;
 
@@ -33,6 +45,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     EditText edtxMail, edtxPassword;
 
     final static int LEN_PASS = 6;
+
+    private RestController restController;
+
+    public ProgressBar spinner;
+
+
+    public enum StateRequest {TRUE, FALSE, UNCHECKED}
+
+    StateRequest stateRequest = StateRequest.UNCHECKED;
+
+    public final Context context = this;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +73,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         edtxMail = findViewById(R.id.edtxMail);
         edtxPassword = findViewById(R.id.edtxPassword);
 
+        restController = new RestController(this);
+
+        spinner= findViewById(R.id.progressBarLoading);
+
         swtDarkMode = findViewById(R.id.swtDark);
 
         lblDarkMode = findViewById(R.id.lblDarkMode);
@@ -62,40 +89,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             btnRegister.setVisibility(View.VISIBLE);
 
         btnLogin.setOnClickListener(this);
+        btnRegister.setOnClickListener(this);
 
-        btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-                Log.i("Button", "Register premuto");
-            }
-        });
 
         swtDarkMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-           /* @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
-                    currentLayout.setBackgroundColor(parseColor("#FFFFFF"));
-                    currentLayout.setBackgroundColor(ContextCompat.getColor(LoginActivity.this, R.color.backgroundDark));
-                    edtxMail.setHintTextColor(ContextCompat.getColor(LoginActivity.this,R.color.backgroundLight));
-                    edtxPassword.setHintTextColor(ContextCompat.getColor(LoginActivity.this,R.color.backgroundLight));
-                    lblDarkMode.setTextColor(ContextCompat.getColor(LoginActivity.this,R.color.backgroundLight));
-                    edtxMail.setTextColor(ContextCompat.getColor(LoginActivity.this,R.color.backgroundLight));
-                    edtxPassword.setTextColor(ContextCompat.getColor(LoginActivity.this,R.color.backgroundLight));
-                    lblDarkMode.setTextColor(ContextCompat.getColor(LoginActivity.this,R.color.backgroundLight));
-                }
-                else {
-                    currentLayout.setBackgroundColor(ContextCompat.getColor(LoginActivity.this, R.color.backgroundLight));
-                    edtxMail.setHintTextColor(ContextCompat.getColor(LoginActivity.this,R.color.hint_colorLight));
-                    edtxPassword.setHintTextColor(ContextCompat.getColor(LoginActivity.this,R.color.hint_colorLight));
-                    lblDarkMode.setTextColor(ContextCompat.getColor(LoginActivity.this,R.color.backgroundDark));
-                    edtxMail.setTextColor(ContextCompat.getColor(LoginActivity.this,R.color.backgroundDark));
-                    edtxPassword.setTextColor(ContextCompat.getColor(LoginActivity.this,R.color.backgroundDark));
-                    lblDarkMode.setTextColor(ContextCompat.getColor(LoginActivity.this,R.color.backgroundDark));
-                }
-
-            }*/
-
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked)
@@ -103,12 +100,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 else
                     onCreate(R.layout.activity_login_light);
             }
-
         });
 
 
         Log.i("Lifecycle","onCreate chiamato");
     }
+
+
 
 
     private boolean hasInvitationCode(){
@@ -120,22 +118,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if(v.getId()==R.id.buttonLogin) {
             Log.i("Button", "Login premuto");
             if(Utilities.doLogin(this, edtxMail.getText().toString(),edtxPassword.getText().toString(), LEN_PASS)){
-               // Intent intent = new Intent(this, WelcomeActivity.class);
-               // intent.putExtra("email",edtxMail.getText().toString());
-               // startActivity(intent);
+                btnLogin.setEnabled(false);
+                spinner.setVisibility(View.VISIBLE);
+                Map<String,String> params = new HashMap<>();
+                params.put("identifier",edtxMail.getText().toString());
+                params.put("password",edtxMail.getText().toString());
+                restController.postRequest("/auth/local", this, this, params);
+                if(stateRequest==StateRequest.TRUE || stateRequest==StateRequest.FALSE) {
+                    spinner.setVisibility(View.GONE);
+                    btnLogin.setEnabled(true);
+                }
             }
+        }else if(v.getId()==R.id.buttonRegister){
+            Intent intent = new Intent(this, RegisterActivity.class);
+            startActivity(intent);
         }
     }
 
     public boolean onOptionsItemSelected(MenuItem menu){
         if(menu.getItemId()==android.R.id.home){
-            Log.i("menu","premo indietro");
             finish();
             return true;
         }else{
             return super.onOptionsItemSelected(menu);
         }
     }
+
 
     public boolean onCreateOptionsMenu(Menu menu) {
         return true;
@@ -169,5 +177,30 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onDestroy() {
         super.onDestroy();
         Log.i("Lifecycle","onDestroy chiamato");
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        Toast.makeText(LoginActivity.this, error.getMessage(),Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onResponse(String response) {
+        try {
+            //JSONArray jsonArray = new JSONArray(response);
+            JSONObject json = new JSONObject(response).getJSONObject("user");
+            Log.i("rispostaTotale",response);
+            Log.i("jsonRisposta", json.toString());
+            if(json.getString("confirmed").equals("true")){
+                Toast.makeText(LoginActivity.this, "Confermato!", Toast.LENGTH_SHORT).show();
+                stateRequest = StateRequest.TRUE;
+                spinner.setVisibility(View.GONE);
+            }else{
+                stateRequest = StateRequest.FALSE;
+                Toast.makeText(LoginActivity.this, "Problema!", Toast.LENGTH_SHORT).show();
+            }
+        }catch (JSONException ex){
+            Log.i("Eccezione", ex.getMessage());
+        }
     }
 }

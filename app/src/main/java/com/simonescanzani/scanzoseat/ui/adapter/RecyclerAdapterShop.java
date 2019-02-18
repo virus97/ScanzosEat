@@ -67,7 +67,6 @@ public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterSho
         }
         //holder.setThumbnail(shop.getThumbnail());
         holder.setImage(shop.getImage_url());
-
     }
 
 
@@ -129,6 +128,7 @@ public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterSho
                 intent.putExtra("Street",item.getStreet());
                 intent.putExtra("MinPrice",item.getMinPriceNumber());
                 intent.putExtra("Thumbnail",item.getImage_url());
+                intent.putExtra("id", item.getId());
                 // start the activity
                 mContext.startActivity(intent);
             }

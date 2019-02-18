@@ -1,6 +1,7 @@
 package com.simonescanzani.scanzoseat.ui.activities;
 
 import android.app.ActivityOptions;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -27,17 +30,20 @@ import com.android.volley.toolbox.Volley;
 import com.simonescanzani.scanzoseat.R;
 import com.simonescanzani.scanzoseat.datamodels.Product;
 import com.simonescanzani.scanzoseat.datamodels.Shop;
+import com.simonescanzani.scanzoseat.services.RestController;
 import com.simonescanzani.scanzoseat.ui.adapter.RecyclerAdapterShop;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.simonescanzani.scanzoseat.ui.adapter.RecyclerAdapterShop.*;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements  Response.Listener<String>, Response.ErrorListener{
+
     private static final String TAG = MainActivity.class.getSimpleName();
 
     ActionBar actionBar;
@@ -51,16 +57,20 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerAdapterShop adapter;
 
+    private RestController restController;
+
+    private ProgressBar spinner;
 
 
     private final static String GRID_STATE = "GRID_STATE";
+    private final static String PREF_NAME= "Preferences";
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences prefs = getSharedPreferences(GRID_STATE, MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
 
         changeLayout(prefs.getBoolean(GRID_STATE, true));
 
@@ -68,6 +78,11 @@ public class MainActivity extends AppCompatActivity {
 
         actionBar = getSupportActionBar();
 
+        spinner=(ProgressBar)findViewById(R.id.progressBar);
+        spinner.setVisibility(View.GONE);
+        spinner.setVisibility(View.VISIBLE);
+
+/*
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "http://5ba19290ee710f0014dd764c.mockapi.io/api/v1/restaurant";
@@ -83,12 +98,13 @@ public class MainActivity extends AppCompatActivity {
                         //Start Parsing
                         try {
                             lstShop = new ArrayList<>();
-                            JSONArray jsonArray = new JSONArray(response);
+                            //JSONArray jsonArray = new JSONArray(response);
+                            JSONArray jsonArray = new JSONObject(response).getJSONArray("data");
                             for(int i=0; i<jsonArray.length(); i++){
                                 Shop shop = new Shop(jsonArray.getJSONObject(i));
                                 lstShop.add(shop);
-                                setLayout();
                             }
+                            setLayout();
                             adapter.setData(lstShop);
                         }catch (JSONException ex){
                             ex.printStackTrace();
@@ -104,7 +120,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
-
+*/
+        restController = new RestController(this);
+        restController.getRequest(Shop.ENDPOINT, this, this);
 
         recyclerView = findViewById(R.id.recyclerview_shop);
         mFloatingActionButton = findViewById(R.id.fab);
@@ -204,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         } else if (item.getItemId() == (R.id.change_layout)) {
             changeLayout(!getLayout());
-            SharedPreferences.Editor editor = getSharedPreferences(GRID_STATE, MODE_PRIVATE).edit();
+            SharedPreferences.Editor editor = getSharedPreferences(PREF_NAME, MODE_PRIVATE).edit();
             editor.putBoolean(GRID_STATE, getLayout());
             editor.apply();
             if(getLayout())
@@ -216,4 +234,30 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        Log.e(TAG,error.getMessage());
+        Toast.makeText(this, error.getMessage(),Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onResponse(String response) {
+        Log.d(TAG, response);
+
+        //Start Parsing
+        try {
+            lstShop = new ArrayList<>();
+            JSONArray jsonArray = new JSONArray(response);
+            //JSONArray jsonArray = new JSONObject(response).getJSONArray("data");
+            for(int i=0; i<jsonArray.length(); i++){
+                Shop shop = new Shop(jsonArray.getJSONObject(i));
+                lstShop.add(shop);
+            }
+            setLayout();
+            spinner.setVisibility(View.INVISIBLE);
+           // adapter.setData(lstShop);
+        }catch (JSONException ex){
+            ex.printStackTrace();
+        }
+    }
 }

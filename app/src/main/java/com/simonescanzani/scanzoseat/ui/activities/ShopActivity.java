@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,27 +19,39 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.RequestManager;
 import com.simonescanzani.scanzoseat.R;
 import com.simonescanzani.scanzoseat.datamodels.Product;
+import com.simonescanzani.scanzoseat.datamodels.Shop;
+import com.simonescanzani.scanzoseat.services.RestController;
 import com.simonescanzani.scanzoseat.ui.adapter.RecyclerAdapterProduct;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class ShopActivity extends AppCompatActivity implements RecyclerAdapterProduct.onQuantityChangedListener {
+public class ShopActivity extends AppCompatActivity implements RecyclerAdapterProduct.onQuantityChangedListener, Response.Listener<String>, Response.ErrorListener {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private View ViewLayout;
     private RecyclerAdapterProduct listAdapter;
     RecyclerView recyclerView;
+    LinearLayoutManager layoutManager;
 
     ArrayList<Product> lstProduct;
 
     ProgressBar progressBar;
     Button btnCheckOut;
-    TextView txtTotal;
+    TextView txtTotal, txtProdotti;
 
     private Menu menu;
     ImageView img;
@@ -46,8 +59,12 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
     private String Title;
     private String Street;
     private float MinPrice;
+    private String id;
 
     private float total;
+
+    private RestController restController;
+    private ProgressBar spinner;
 
 
     @Override
@@ -55,16 +72,22 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
         super.onCreate(savedInstanceState);
         ViewLayout = getLayoutInflater().inflate(R.layout.activity_shop, null);
 
-        setProduct();
+        //setProduct();
+
 
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
 
         setContentView(ViewLayout);
 
+        spinner= findViewById(R.id.progressBarLoading);
+        spinner.setVisibility(View.GONE);
+        spinner.setVisibility(View.VISIBLE);
+
         recyclerView = findViewById(R.id.recyclerview_shop);
         progressBar = findViewById(R.id.progressBar);
         btnCheckOut = findViewById(R.id.btnCheckOut);
         txtTotal = findViewById(R.id.txtTotal);
+        txtProdotti = findViewById(R.id.txtProdotti);
 
 
         Intent intent = getIntent();
@@ -73,15 +96,19 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
         MinPrice = intent.getExtras().getFloat("MinPrice");
         //int image = intent.getExtras().getInt("Thumbnail") ;
         String imageURL = intent.getExtras().getString("Thumbnail");
+        id = intent.getExtras().getString("id");
+        Log.i("identificativo",Shop.ENDPOINT.concat("/").concat(id));
+
+        restController = new RestController(this);
+        restController.getRequest(Shop.ENDPOINT.concat("/").concat(id), this, this);
 
         progressBar.setMax((int)(MinPrice*100));
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+
+        layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         listAdapter = new RecyclerAdapterProduct(lstProduct, MinPrice,this);
         listAdapter.setOnQuantityChangedListener(this);
-        recyclerView.setAdapter(listAdapter);
-
 
 
         final Toolbar mToolbar = findViewById(R.id.toolbar);
@@ -216,4 +243,38 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
         return true;
     }
 
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        Log.e(TAG,error.getMessage());
+        Toast.makeText(this, error.getMessage(),Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onResponse(String response) {
+        Log.d(TAG, response);
+
+        //Start Parsing
+        try {
+            lstProduct = new ArrayList<>();
+           // JSONArray jsonArray = new JSONArray(response);
+            JSONArray jsonArray = new JSONObject(response).getJSONArray("products");
+            for(int i=0; i<jsonArray.length(); i++){
+                Product product = new Product(jsonArray.getJSONObject(i));
+                lstProduct.add(product);
+            }
+            if(lstProduct.size()==0)
+                txtProdotti.setText(getString(R.string.no_prodotti_disponibili));
+            else{
+                listAdapter.setData(lstProduct);
+
+                recyclerView.setLayoutManager(layoutManager);
+                listAdapter = new RecyclerAdapterProduct(lstProduct, MinPrice,this);
+                listAdapter.setOnQuantityChangedListener(this);
+                recyclerView.setAdapter(listAdapter);
+            }
+            spinner.setVisibility(View.INVISIBLE);
+        }catch (JSONException ex){
+            ex.printStackTrace();
+        }
+    }
 }

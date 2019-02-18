@@ -1,12 +1,14 @@
 package com.simonescanzani.scanzoseat.datamodels;
 
-import java.io.Serializable;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class Product implements Serializable {
+public class Product {
     private float prezzo;
     private String nome;
     private String ingredienti;
     private int Thumbnail ;
+    private String image_url;
     private int quantity = 0;
 
     public Product(String nome, String ingredienti, float prezzo, int Thumbnail){
@@ -14,6 +16,17 @@ public class Product implements Serializable {
         this.ingredienti=ingredienti;
         this.prezzo=prezzo;
         this.Thumbnail=Thumbnail;
+    }
+
+    public Product(JSONObject jsonProduct){
+        try {
+            this.nome = jsonProduct.getString("name");
+            this.prezzo = (float)jsonProduct.getDouble("price");
+            this.ingredienti = jsonProduct.getString("ingredients");
+            this.image_url = jsonProduct.getString("image_url");
+        }catch (JSONException ex){
+            ex.getStackTrace();
+        }
     }
 
     public String getPrezzo() {
@@ -67,5 +80,13 @@ public class Product implements Serializable {
     public void decreaseQuantity(){
         if(this.quantity!=0)
             this.quantity--;
+    }
+
+    public String getImage_url() {
+        return image_url;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
     }
 }

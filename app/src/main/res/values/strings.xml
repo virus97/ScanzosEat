@@ -20,5 +20,6 @@
     <string name="pay">PAY</string>
     <string name="title_activity_maps">Map</string>
     <string name="riepilogo_ordine">Riepilogo ordine</string>
+    <string name="no_prodotti_disponibili">Non ci sono prodotti disponibili</string>
 
 </resources>
