@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.simonescanzani.scanzoseat.R;
+import com.simonescanzani.scanzoseat.SharedPreferencesUtils;
 import com.simonescanzani.scanzoseat.Utilities;
 import com.simonescanzani.scanzoseat.services.RestController;
 
@@ -52,17 +53,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     public ProgressBar spinner;
 
-
-    public enum StateRequest {TRUE, FALSE, UNCHECKED}
-
-    StateRequest stateRequest = StateRequest.UNCHECKED;
-
     public final Context context = this;
 
-    private static final String ACCOUNT_NAME = "ACCOUNT_CREDENTIAL";
-    private static final String USERNAME = "USERNAME";
-    private static final String EMAIL = "EMAIL";
-    private static final String JWT = "JWT";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -130,10 +122,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 params.put("identifier",edtxMail.getText().toString());
                 params.put("password",edtxPassword.getText().toString());
                 restController.postRequest("/auth/local", this, this, params);
-                if(stateRequest==StateRequest.TRUE || stateRequest==StateRequest.FALSE) {
-                    spinner.setVisibility(View.GONE);
-                    btnLogin.setEnabled(true);
-                }
+                spinner.setVisibility(View.GONE);
+                btnLogin.setEnabled(true);
             }
         }else if(v.getId()==R.id.buttonRegister){
             Intent intent = new Intent(this, RegisterActivity.class);
@@ -199,22 +189,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             JSONObject json = jsonRisposta.getJSONObject("user");
             if(json.getString("confirmed").equals("true")){
                 Toast.makeText(LoginActivity.this, "Confermato!", Toast.LENGTH_SHORT).show();
-                stateRequest = StateRequest.TRUE;
                 spinner.setVisibility(View.GONE);
 
-                SharedPreferences.Editor editor = getSharedPreferences(ACCOUNT_NAME, MODE_PRIVATE).edit();
-                editor.putString(USERNAME, json.getString("username"));
-                editor.putString(EMAIL, json.getString("email"));
-                editor.putString(JWT, jwt);
-                editor.apply();
+                SharedPreferencesUtils.putValue(LoginActivity.this, SharedPreferencesUtils.USERNAME, json.getString("username"));
+                SharedPreferencesUtils.putValue(LoginActivity.this, SharedPreferencesUtils.EMAIL, json.getString("email"));
+                SharedPreferencesUtils.putValue(LoginActivity.this, SharedPreferencesUtils.JWT, jwt);
 
                 setResult(Activity.RESULT_OK);
                 finish();
 
-                /*Intent intent = new Intent(LoginActivity.this, AccountActivity.class);
-                startActivity(intent);*/
             }else{
-                stateRequest = StateRequest.FALSE;
                 Toast.makeText(LoginActivity.this, "Problema!", Toast.LENGTH_SHORT).show();
             }
         }catch (JSONException ex){

@@ -1,6 +1,5 @@
 package com.simonescanzani.scanzoseat.ui.activities;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -15,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.simonescanzani.scanzoseat.R;
+import com.simonescanzani.scanzoseat.SharedPreferencesUtils;
 
 public class AccountActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -22,10 +22,6 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
     private ImageView img;
     private Button btnEsci;
 
-    private static final String ACCOUNT_NAME = "ACCOUNT_CREDENTIAL";
-    private static final String USERNAME = "USERNAME";
-    private static final String EMAIL = "EMAIL";
-    private static final String JWT = "JWT";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,9 +35,7 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
 
         img.setImageResource(R.drawable.photo);
 
-        SharedPreferences prefsAccount = getSharedPreferences(ACCOUNT_NAME, MODE_PRIVATE);
-
-        String username = prefsAccount.getString(USERNAME, "NULL");
+        String username = SharedPreferencesUtils.getStringValue(this, SharedPreferencesUtils.USERNAME);
 
         final Toolbar mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -83,11 +77,10 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v){
         if(v.getId()==R.id.btnEsci){
-            SharedPreferences.Editor editor = getSharedPreferences(ACCOUNT_NAME, MODE_PRIVATE).edit();
-            editor.putString(USERNAME, "");
-            editor.putString(EMAIL, "");
-            editor.putString(JWT, "");
-            editor.apply();
+
+            SharedPreferencesUtils.putValue(AccountActivity.this, SharedPreferencesUtils.USERNAME,null);
+            SharedPreferencesUtils.putValue(AccountActivity.this, SharedPreferencesUtils.EMAIL,null);
+            SharedPreferencesUtils.putValue(AccountActivity.this, SharedPreferencesUtils.JWT,null);
             finish();
         }
     }

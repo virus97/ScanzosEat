@@ -2,7 +2,6 @@ package com.simonescanzani.scanzoseat.ui.activities;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import com.simonescanzani.scanzoseat.R;
+import com.simonescanzani.scanzoseat.SharedPreferencesUtils;
 import com.simonescanzani.scanzoseat.datamodels.Product;
 import com.simonescanzani.scanzoseat.datamodels.Shop;
 import com.simonescanzani.scanzoseat.services.RestController;
@@ -57,20 +57,11 @@ public class MainActivity extends AppCompatActivity implements  Response.Listene
     private ProgressBar spinner;
 
 
-    private final static String GRID_STATE = "GRID_STATE";
-    private final static String PREF_NAME= "Preferences";
-
-    private static final String ACCOUNT_NAME = "ACCOUNT_CREDENTIAL";
-    private static final String JWT = "JWT";
-
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-
-        changeLayout(prefs.getBoolean(GRID_STATE, true));
+        changeLayout(SharedPreferencesUtils.getBooleanValue(this,SharedPreferencesUtils.GRID));
 
         setContentView(R.layout.activity_main);
 
@@ -178,8 +169,9 @@ public class MainActivity extends AppCompatActivity implements  Response.Listene
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.login_menu) {
-            SharedPreferences prefsAccount = getSharedPreferences(ACCOUNT_NAME, MODE_PRIVATE);
-            if(prefsAccount.getString(JWT, "")!=""){
+           // SharedPreferences prefsAccount = getSharedPreferences(ACCOUNT_NAME, MODE_PRIVATE);
+            //if(prefsAccount.getString(JWT, "")!=""){
+            if(SharedPreferencesUtils.getStringValue(MainActivity.this,SharedPreferencesUtils.JWT)!=null){
                 startActivity(new Intent(this, AccountActivity.class));
                 return true;
             }else {
@@ -188,9 +180,8 @@ public class MainActivity extends AppCompatActivity implements  Response.Listene
             }
         } else if (item.getItemId() == (R.id.change_layout)) {
             changeLayout(!getLayout());
-            SharedPreferences.Editor editor = getSharedPreferences(PREF_NAME, MODE_PRIVATE).edit();
-            editor.putBoolean(GRID_STATE, getLayout());
-            editor.apply();
+            SharedPreferencesUtils.putValue(MainActivity.this,SharedPreferencesUtils.GRID, getLayout());
+
             if(getLayout())
                 item.setIcon(R.drawable.ic_list_view);
             else

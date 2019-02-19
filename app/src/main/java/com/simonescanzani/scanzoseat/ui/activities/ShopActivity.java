@@ -30,6 +30,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.RequestManager;
 import com.simonescanzani.scanzoseat.R;
+import com.simonescanzani.scanzoseat.SharedPreferencesUtils;
 import com.simonescanzani.scanzoseat.datamodels.Product;
 import com.simonescanzani.scanzoseat.datamodels.Shop;
 import com.simonescanzani.scanzoseat.services.RestController;
@@ -68,9 +69,6 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
 
     private RestController restController;
     private ProgressBar spinner;
-
-    private static final String ACCOUNT_NAME = "ACCOUNT_CREDENTIAL";
-    private static final String JWT = "JWT";
 
     private static final int REQUEST_CODE = 2001;
 
@@ -135,8 +133,9 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
         btnCheckOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences prefsAccount = getSharedPreferences(ACCOUNT_NAME, MODE_PRIVATE);
-                if(!(prefsAccount.getString(JWT, "").equals(""))) {
+               // SharedPreferences prefsAccount = getSharedPreferences(ACCOUNT_NAME, MODE_PRIVATE);
+                //if(!(prefsAccount.getString(JWT, "").equals(""))) {
+                if(SharedPreferencesUtils.getStringValue(ShopActivity.this,SharedPreferencesUtils.JWT)!=null){
                     Intent intent = new Intent(ShopActivity.this, CheckoutActivity.class);
                     startActivity(intent);
                 }else {
@@ -226,7 +225,6 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.action_maps) {
@@ -236,9 +234,8 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
             startActivity(mapIntent);
             return true;
         }else if(id == R.id.action_login){
-            SharedPreferences prefsAccount = getSharedPreferences(ACCOUNT_NAME, MODE_PRIVATE);
 
-            if(!(prefsAccount.getString(JWT, "").equals(""))){
+            if(SharedPreferencesUtils.getStringValue(ShopActivity.this,SharedPreferencesUtils.JWT)!=null){
                 Intent intent = new Intent(this, AccountActivity.class);
                 startActivity(intent);
             } else{

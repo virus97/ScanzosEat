@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.simonescanzani.scanzoseat.R;
+import com.simonescanzani.scanzoseat.SharedPreferencesUtils;
 import com.simonescanzani.scanzoseat.services.RestController;
 
 import org.json.JSONException;
@@ -39,9 +40,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private RestController restController;
 
     private ProgressBar spinner;
-
-    private final static String TOKEN_PREF = "Token";
-    private final static String PREF_NAME= "Preferences";
 
 
     @Override
@@ -121,9 +119,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             btnRegister.setEnabled(true);
             if(jsonUser.getString("confirmed").equals("true")){
                 Toast.makeText(RegisterActivity.this, "Confermato!", Toast.LENGTH_SHORT).show();
-                SharedPreferences.Editor editor = getSharedPreferences(PREF_NAME, MODE_PRIVATE).edit();
-                editor.putString(TOKEN_PREF, TOKEN);
-                editor.apply();
+
+                SharedPreferencesUtils.putValue(RegisterActivity.this, SharedPreferencesUtils.JWT,TOKEN);
                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                 startActivity(intent);
             }else{
@@ -146,7 +143,5 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             restController.postRequest("/auth/local/register", this, this, params);
             btnRegister.setEnabled(false);
         }
-            //far partire un caricamento e stopparlo in onResponse
-        //disabilita l'onClick per non spammare le richieste
     }
 }
