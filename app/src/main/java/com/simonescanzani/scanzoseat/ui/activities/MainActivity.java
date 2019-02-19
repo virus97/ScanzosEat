@@ -1,16 +1,17 @@
 package com.simonescanzani.scanzoseat.ui.activities;
 
+import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements  Response.Listene
 
     private ProgressBar spinner;
 
+    private static final int REQUEST_CODE = 2001;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,8 +84,13 @@ public class MainActivity extends AppCompatActivity implements  Response.Listene
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,CheckoutActivity.class);
-                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(MainActivity.this).toBundle());
+                if(SharedPreferencesUtils.getStringValue(MainActivity.this, SharedPreferencesUtils.JWT)!=null){
+                    Intent intent = new Intent(MainActivity.this, CheckoutActivity.class);
+                    startActivity(intent);
+                }else{
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE);
+                }
             }
         });
 
@@ -101,9 +108,17 @@ public class MainActivity extends AppCompatActivity implements  Response.Listene
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        //super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==this.REQUEST_CODE && resultCode== Activity.RESULT_OK){
+            startActivity(new Intent(MainActivity.this,CheckoutActivity.class));
+        }
+    }
+
     public void setLayout(){
         if(getLayout()) {
-            adapter = new RecyclerAdapterShop(R.layout.cardview_item,lstShop,this);
+            adapter = new RecyclerAdapterShop(R.layout.view_item_shop_card,lstShop,this);
             GridLayoutManager manager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(manager);
         }else{

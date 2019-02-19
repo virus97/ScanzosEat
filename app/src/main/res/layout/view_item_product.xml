@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/cardview_id"
         android:clickable="true"
@@ -33,7 +34,8 @@
                     android:id="@+id/img_id"
                     android:layout_width="160sp"
                     android:layout_height="170sp"
-                    android:scaleType="centerCrop"/>
+                    android:scaleType="centerCrop"
+                    tools:src="@drawable/pizza_margherita"/>
 
             </LinearLayout>
 
@@ -48,27 +50,30 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5sp"
-                    android:textSize="22sp" />
+                    android:textSize="22sp"
+                    tools:text="Pizza Margherita"/>
                 <TextView
                     android:id="@+id/description_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
-                    android:padding="5sp"/>
+                    android:padding="5sp"
+                    tools:text="Descrizione"/>
 
                 <TextView
                     android:id="@+id/description1_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
-                    android:padding="5sp"/>
+                    android:padding="5sp"
+                    tools:text="Descrizione 2"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
-                    <android.support.v7.widget.AppCompatButton
+                    <Button
                         android:id="@+id/btnAggiungi"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -76,7 +81,7 @@
                         android:text="+"
                         android:textColor="@color/colorPrimaryDark"
                         android:layout_gravity="bottom"
-                        style="@style/Base.Widget.AppCompat.Button.Borderless"/>
+                        style="@style/Widget.MaterialComponents.Button.TextButton"/>
 
 
                     <EditText
@@ -87,10 +92,11 @@
                         android:cursorVisible="false"
                         android:focusable="false"
                         android:focusableInTouchMode="false"
-                        android:textSize="22sp"/>
+                        android:textSize="22sp"
+                        tools:text="0"/>
 
 
-                    <android.support.v7.widget.AppCompatButton
+                    <Button
                         android:id="@+id/btnRimuovi"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -98,7 +104,7 @@
                         android:text="-"
                         android:textColor="@color/colorPrimaryDark"
                         android:layout_gravity="bottom"
-                        style="@style/Base.Widget.AppCompat.Button.Borderless"/>
+                        style="@style/Widget.MaterialComponents.Button.TextButton"/>
 
 
                 </LinearLayout>
@@ -110,7 +116,7 @@
 
 
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
 
 </LinearLayout>

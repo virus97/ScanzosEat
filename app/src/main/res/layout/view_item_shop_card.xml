@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardview_id"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:layout_width="match_parent"
+    android:layout_height="310sp"
+    xmlns:cardview="http://schemas.android.com/apk/res-auto"
+    cardview:cardCornerRadius="4dp"
+    android:layout_margin="10dp">
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="72sp"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="40sp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layout_marginStart="16sp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="40sp"
+                        android:layout_height="40sp"
+                        cardview:cardCornerRadius="20sp">
+
+                        <ImageView
+                            android:id="@+id/imgShop"
+                            android:layout_width="40sp"
+                            android:layout_height="40sp"
+                            android:src="@mipmap/ic_launcher"
+                            android:scaleType="centerCrop"/>
+                    </com.google.android.material.card.MaterialCardView>
+
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/title_id"
+                        android:textColor="#2d2d2d"
+                        android:paddingTop="8dp"
+                        android:textSize="20sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16sp"
+                        android:textStyle="bold"
+                        tools:text="Shop Title"
+                        android:fontFamily="@font/roboto_bold"/>
+
+
+                    <TextView
+                        android:id="@+id/description_id"
+                        android:textColor="#2d2d2d"
+                        android:paddingTop="4dp"
+                        android:textSize="14sp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16sp"
+                        tools:text="Shop Address"
+                        android:fontFamily="@font/roboto_regular"/>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+
+            <ImageView
+                android:id="@+id/img_id"
+                android:layout_width="match_parent"
+                android:layout_height="192sp"
+                android:scaleType="centerCrop"
+                android:background="#2d2d2d"
+                tools:src="@drawable/pizza_margherita"/>
+
+
+            <TextView
+                android:id="@+id/description1_id"
+                android:textColor="#2d2d2d"
+                android:paddingTop="8dp"
+                android:textSize="14sp"
+                android:layout_marginStart="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Shop Min Price Order"
+                android:layout_marginTop="8sp"
+                android:fontFamily="@font/roboto_italic"/>
+
+        </LinearLayout>
+
+
+    </com.google.android.material.card.MaterialCardView>
+
+

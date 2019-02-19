@@ -2,17 +2,16 @@ package com.simonescanzani.scanzoseat.ui.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.Nullable;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -181,10 +180,14 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
     private void updateTotal(float item){
         total+=item;
         txtTotal.setText("TOTAL "+total+"€");
-        if(total>=MinPrice)
+        if(total>=MinPrice) {
             btnCheckOut.setEnabled(true);
-        else
+            //btnCheckOut.setTextColor(Color.parseColor("#6200ee"));
+        }
+        else {
             btnCheckOut.setEnabled(false);
+            //btnCheckOut.setTextColor(Color.parseColor("#A9A9A9"));
+        }
     }
 
     private void updateProgress(int progress){
@@ -251,9 +254,6 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         //super.onActivityResult(requestCode, resultCode, data);
-
-        Log.d("ciaone", "requestCode " + requestCode);
-        Log.d("ciaone", "resultCode " + resultCode);
 
         if(requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK){
             //TODO login is successful

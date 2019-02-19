@@ -2,9 +2,9 @@ package com.simonescanzani.scanzoseat.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +18,7 @@ import com.simonescanzani.scanzoseat.R;
 import com.simonescanzani.scanzoseat.datamodels.Shop;
 import com.simonescanzani.scanzoseat.ui.activities.ShopActivity;
 
+
 import java.util.ArrayList;
 
 public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterShop.ListLayoutHolder> {
@@ -26,7 +27,6 @@ public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterSho
     private Context mContext;
     private int idVista;
     private static boolean grid = true;
-
 
 
     public RecyclerAdapterShop(int idVista, ArrayList<Shop> contactsList, Context context) {
@@ -61,10 +61,8 @@ public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterSho
     public void onBindViewHolder(@NonNull ListLayoutHolder holder, final int position) {
         final Shop shop = shoplist.get(position);
         holder.setTitle(shop.getTitle());
-        if(!grid) {
-            holder.setStreet(shop.getStreet());
-            holder.setMinPrice(shop.getMinPrice());
-        }
+        holder.setStreet(shop.getStreet());
+        holder.setMinPrice(shop.getMinPrice());
         //holder.setThumbnail(shop.getThumbnail());
         holder.setImage(shop.getImage_url());
     }
@@ -76,16 +74,18 @@ public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterSho
         private TextView txtStreet;
         private TextView txtMinPrice;
         private ImageView imgShop;
+        private ImageView imgShopMin;
         private CardView cardView ;
 
         public ListLayoutHolder(View itemView) {
             super(itemView);
 
             txtTitle = itemView.findViewById(R.id.title_id);
-            if(!grid) {
-                txtStreet = itemView.findViewById(R.id.description_id);
-                txtMinPrice = itemView.findViewById(R.id.description1_id);
-            }
+            txtStreet = itemView.findViewById(R.id.description_id);
+            txtMinPrice = itemView.findViewById(R.id.description1_id);
+            if(grid)
+                imgShopMin = itemView.findViewById(R.id.imgShop);
+
             imgShop = itemView.findViewById(R.id.img_id);
             cardView = itemView.findViewById(R.id.cardview_id);
 
@@ -113,6 +113,8 @@ public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterSho
             RequestManager requestManager = Glide.with(mContext);
             RequestBuilder requestBuilder = requestManager.load(img);
             requestBuilder.into(imgShop);
+            if(grid)
+                requestBuilder.into(imgShopMin);
         }
 
 
