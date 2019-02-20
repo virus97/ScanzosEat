@@ -11,12 +11,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -79,7 +81,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         lblDarkMode = findViewById(R.id.lblDarkMode);
 
-        currentLayout = findViewById(R.id.loginLinearLayout);
+        currentLayout = findViewById(R.id.loginLayout);
 
         if(hasInvitationCode())
             btnRegister.setVisibility(View.GONE);
@@ -97,6 +99,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     onCreate(R.layout.activity_login_dark);
                 else
                     onCreate(R.layout.activity_login_light);
+            }
+        });
+
+        currentLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utilities.hideKeyboard(LoginActivity.this,v);
             }
         });
 

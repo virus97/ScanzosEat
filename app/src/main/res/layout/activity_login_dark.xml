@@ -1,97 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/loginLinearLayoutDark"
+<ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundDark"
-    android:orientation="vertical"
-    tools:context=".ui.activities.LoginActivity">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <EditText
-        android:id="@+id/edtxMail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:gravity="center"
-        android:hint="@string/email_hint"
-        android:inputType="textEmailAddress"
-        android:textColor="@color/hint_colorLight"
-        android:textColorHint="@color/hint_colorLight" />
 
-    <EditText
-        android:id="@+id/edtxPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:gravity="center"
-        android:hint="@string/password_hint"
-        android:inputType="textPassword"
-        android:textColor="@color/hint_colorLight"
-        android:textColorHint="@color/hint_colorLight" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="32dp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/buttonLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginRight="32dp"
-            android:text="@string/login_text" />
-
-        <Button
-            android:id="@+id/buttonRegister"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/signin_text" />
-
-    </LinearLayout>
-
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/loginLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="bottom|end"
-        android:orientation="vertical">
+        android:background="@color/backgroundDark"
+        android:orientation="vertical"
+        tools:context=".ui.activities.LoginActivity">
 
-        <ProgressBar
-            android:id="@+id/progressBarLoading"
-            style="?android:attr/progressBarStyleLarge"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="320sp"
+                    android:layout_height="320sp"
+                    android:src="@mipmap/icon_app_foreground" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtProdotti"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="30sp"
+                android:layout_marginStart="16sp"
+                android:textStyle="bold"
+                android:text="@string/login_activity"
+                android:textColor="@color/icons"
+                android:fontFamily="@font/roboto_bold"/>
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/edtxMail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
+            android:gravity="center"
+            android:hint="@string/email_hint"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/hint_colorLight"
+            android:textColorHint="@color/hint_colorLight" />
+
+        <EditText
+            android:id="@+id/edtxPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
+            android:gravity="center"
+            android:hint="@string/password_hint"
+            android:inputType="textPassword"
+            android:textColor="@color/hint_colorLight"
+            android:textColorHint="@color/hint_colorLight" />
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="30sp"
-            android:visibility="gone" />
+            android:layout_marginTop="32dp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/lblDarkMode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Dark Mode"
-            android:textColor="@color/hint_colorLight"
-            android:textSize="16dp" />
+            <Button
+                android:id="@+id/buttonLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="32dp"
+                android:text="@string/login_text" />
 
-        <Switch
-            android:id="@+id/swtDark"
+            <Button
+                android:id="@+id/buttonRegister"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/signin_text" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="true" />
+            android:layout_height="match_parent"
+            android:gravity="bottom|end"
+            android:orientation="vertical">
 
+            <ProgressBar
+                android:id="@+id/progressBarLoading"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="30sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/lblDarkMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dark Mode"
+                android:textColor="@color/hint_colorLight"
+                android:textSize="16dp"
+                android:visibility="invisible"/>
+
+            <Switch
+                android:id="@+id/swtDark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:visibility="invisible"/>
+
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

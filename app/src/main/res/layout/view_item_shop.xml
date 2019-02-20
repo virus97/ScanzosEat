@@ -27,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="5sp">
+                android:layout_marginEnd="5sp">
 
                 <ImageView
                     android:id="@+id/img_id"
@@ -70,6 +70,37 @@
                     android:padding="5sp"
                     tools:text="Via le mani dal naso"
                     android:fontFamily="@font/roboto_italic"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="8sp"
+                    android:layout_marginStart="-3sp"
+                    android:gravity="bottom">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rating"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/roboto_italic"
+                        cardview:layout_anchor="@+id/restaurant_rating"/>
+
+                    <RatingBar
+                        android:id="@+id/restaurant_rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="false"
+                        android:isIndicator="true"
+                        android:max="5"
+                        android:numStars="5"
+                        android:layout_marginStart="8sp"
+                        android:theme="@style/AppTheme"
+                        style="@style/Base.Widget.AppCompat.RatingBar.Small"/>
+
+                </LinearLayout>
+
+
 
 
             </LinearLayout>

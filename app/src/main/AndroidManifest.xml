@@ -22,10 +22,12 @@
         </activity>
         <activity
             android:name=".ui.activities.LoginActivity"
-            android:label="@string/login_activity" />
+            android:label="@string/login_activity"
+            android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".ui.activities.RegisterActivity"
-            android:label="@string/register_activity" />
+            android:label="@string/register_activity"
+            android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".ui.activities.CheckoutActivity"
             android:label="@string/checkout_activity" />

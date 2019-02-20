@@ -1,6 +1,8 @@
 package com.simonescanzani.scanzoseat.datamodels;
 
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,6 +14,7 @@ public class Shop {
     private int Thumbnail ;
     private String image_url;
     private String id;
+    private float rating;
     public final static String ENDPOINT = "/restaurants";
 
 
@@ -34,6 +37,8 @@ public class Shop {
             //this.minPrice = Float.valueOf(jsonShop.getString("min_order"));
             this.image_url = jsonShop.getString("image_url");
             this.id = jsonShop.getString("id");
+            this.rating=(float)(jsonShop.getDouble("rating")/10);
+            Log.i("rating", String.valueOf(this.rating));
         }catch (JSONException ex){
             ex.getStackTrace();
         }
@@ -91,5 +96,13 @@ public class Shop {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
     }
 }

@@ -66,6 +66,33 @@
                 android:fontFamily="@font/roboto_italic"
                 android:layout_marginBottom="8sp"/>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8sp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rating"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/roboto_italic"
+                    cardview:layout_anchor="@+id/restaurant_rating" />
+
+                <RatingBar
+                    android:id="@+id/restaurant_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:isIndicator="true"
+                    android:max="5"
+                    android:numStars="5"
+                    android:layout_marginStart="8sp"
+                    android:theme="@style/AppTheme"
+                    style="@style/Base.Widget.AppCompat.RatingBar.Small"/>
+
+            </LinearLayout>
+
         </LinearLayout>
 
 

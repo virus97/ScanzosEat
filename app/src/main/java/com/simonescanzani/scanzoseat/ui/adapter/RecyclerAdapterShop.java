@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -68,6 +69,7 @@ public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterSho
         holder.setMinPrice(shop.getMinPrice());
         //holder.setThumbnail(shop.getThumbnail());
         holder.setImage(shop.getImage_url());
+        holder.setRating(shop.getRating());
     }
 
 
@@ -79,6 +81,7 @@ public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterSho
         private ImageView imgShop;
         private ImageView imgShopMin;
         private CardView cardView ;
+        private RatingBar ratingBar;
 
         private int columns;
 
@@ -95,6 +98,10 @@ public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterSho
 
             imgShop = itemView.findViewById(R.id.img_id);
             cardView = itemView.findViewById(R.id.cardview_id);
+
+            ratingBar = itemView.findViewById(R.id.restaurant_rating);
+            ratingBar.setMax(5);
+            ratingBar.setStepSize(0.2f);
 
             cardView.setOnClickListener(this);
 
@@ -122,6 +129,10 @@ public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterSho
             requestBuilder.into(imgShop);
             if((grid)&&((mContext.getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE)||((mContext.getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT)&&columns>=4)))
                 requestBuilder.into(imgShopMin);
+        }
+
+        public void setRating(float rating){
+            ratingBar.setRating(rating);
         }
 
 

@@ -10,16 +10,21 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.simonescanzani.scanzoseat.R;
 import com.simonescanzani.scanzoseat.SharedPreferencesUtils;
+import com.simonescanzani.scanzoseat.Utilities;
 import com.simonescanzani.scanzoseat.services.RestController;
 
 import org.json.JSONException;
@@ -30,7 +35,7 @@ import java.util.Map;
 
 import static com.simonescanzani.scanzoseat.Utilities.isUserNameValid;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, Response.Listener<String>, Response.ErrorListener {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener,Response.Listener<String>, Response.ErrorListener {
 
     final int LEN_PASS=6;
     Button btnRegister;
@@ -58,6 +63,29 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         edtxEmail.addTextChangedListener(loginTextWatcher);
         edtxPass.addTextChangedListener(loginTextWatcher);
         edtxUsername.addTextChangedListener(loginTextWatcher);
+
+        edtxEmail.setOnTouchListener(this);
+        edtxPass.setOnTouchListener(this);
+        edtxUsername.setOnTouchListener(this);
+
+        LinearLayout layout = findViewById(R.id.registerLayout);
+        FrameLayout layoutFrame = findViewById(R.id.frameLayout);
+
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utilities.hideKeyboard(RegisterActivity.this,v);
+                btnRegister.setVisibility(View.VISIBLE);
+            }
+        });
+
+        layoutFrame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utilities.hideKeyboard(RegisterActivity.this,v);
+                btnRegister.setVisibility(View.VISIBLE);
+            }
+        });
 
 
         btnRegister.setOnClickListener(this);
@@ -142,5 +170,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             restController.postRequest("/auth/local/register", this, this, params);
             btnRegister.setEnabled(false);
         }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if((v.getId()==R.id.edtxEmail)||(v.getId()==R.id.edtxPass)||(v.getId()==R.id.edtxUsername))
+            btnRegister.setVisibility(View.GONE);
+        return false;
     }
 }
