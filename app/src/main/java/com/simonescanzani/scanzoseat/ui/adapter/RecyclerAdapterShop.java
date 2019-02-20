@@ -83,8 +83,8 @@ public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterSho
             txtTitle = itemView.findViewById(R.id.title_id);
             txtStreet = itemView.findViewById(R.id.description_id);
             txtMinPrice = itemView.findViewById(R.id.description1_id);
-            if(grid)
-                imgShopMin = itemView.findViewById(R.id.imgShop);
+            /*if(grid)
+                imgShopMin = itemView.findViewById(R.id.imgShop);*/
 
             imgShop = itemView.findViewById(R.id.img_id);
             cardView = itemView.findViewById(R.id.cardview_id);
@@ -113,8 +113,8 @@ public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterSho
             RequestManager requestManager = Glide.with(mContext);
             RequestBuilder requestBuilder = requestManager.load(img);
             requestBuilder.into(imgShop);
-            if(grid)
-                requestBuilder.into(imgShopMin);
+            /*if(grid)
+                requestBuilder.into(imgShopMin);*/
         }
 
 

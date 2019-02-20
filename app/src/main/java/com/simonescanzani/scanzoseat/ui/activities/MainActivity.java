@@ -1,8 +1,8 @@
 package com.simonescanzani.scanzoseat.ui.activities;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +25,7 @@ import com.android.volley.VolleyError;
 
 import com.simonescanzani.scanzoseat.R;
 import com.simonescanzani.scanzoseat.SharedPreferencesUtils;
+import com.simonescanzani.scanzoseat.Utilities;
 import com.simonescanzani.scanzoseat.datamodels.Product;
 import com.simonescanzani.scanzoseat.datamodels.Shop;
 import com.simonescanzani.scanzoseat.services.RestController;
@@ -58,10 +59,13 @@ public class MainActivity extends AppCompatActivity implements  Response.Listene
     private ProgressBar spinner;
 
     private static final int REQUEST_CODE = 2001;
+    private int columnsWidth;
+    private int columnsHeight;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        columnsWidth = Utilities.calculateNoOfColumnsWidth(this);
 
         changeLayout(SharedPreferencesUtils.getBooleanValue(this,SharedPreferencesUtils.GRID));
 
@@ -72,6 +76,10 @@ public class MainActivity extends AppCompatActivity implements  Response.Listene
         spinner = findViewById(R.id.progressBar);
         spinner.setVisibility(View.GONE);
         spinner.setVisibility(View.VISIBLE);
+
+        final float scale = getResources().getDisplayMetrics().heightPixels;
+
+        Log.i("densitaSchermo", String.valueOf(scale));
 
 
         restController = new RestController(this);
@@ -118,9 +126,15 @@ public class MainActivity extends AppCompatActivity implements  Response.Listene
 
     public void setLayout(){
         if(getLayout()) {
-            adapter = new RecyclerAdapterShop(R.layout.view_item_shop_card,lstShop,this);
-            GridLayoutManager manager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
-            recyclerView.setLayoutManager(manager);
+            if((MainActivity.this.getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT)&&(columnsWidth<4)){
+                    adapter = new RecyclerAdapterShop(R.layout.view_item_shop_card_portrait, lstShop, this);
+                    GridLayoutManager manager = new GridLayoutManager(this, Utilities.calculateNoOfColumnsWidth(this), GridLayoutManager.VERTICAL, false);
+                    recyclerView.setLayoutManager(manager);
+            }else if((MainActivity.this.getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE)||((MainActivity.this.getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT)&&columnsWidth>=4)){
+                adapter = new RecyclerAdapterShop(R.layout.view_item_shop_card_landscape, lstShop, this);
+                GridLayoutManager manager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false);
+                recyclerView.setLayoutManager(manager);
+            }
         }else{
             LinearLayoutManager layoutManager = new LinearLayoutManager(this);
             recyclerView.setLayoutManager(layoutManager);

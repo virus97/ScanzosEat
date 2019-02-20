@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/cardview_id"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:cardview="http://schemas.android.com/apk/res-auto"
+        cardview:cardCornerRadius="4sp"
+        android:layout_margin="8sp">
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/img_id"
+                android:layout_width="match_parent"
+                android:layout_height="192sp"
+                android:scaleType="centerCrop"
+                android:background="#2d2d2d"
+                tools:src="@drawable/pizza_margherita"/>
+
+            <TextView
+                android:id="@+id/title_id"
+                android:textColor="#2d2d2d"
+                android:paddingTop="8sp"
+                android:textSize="20sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12sp"
+                android:textStyle="bold"
+                tools:text="Shop Title"
+                android:fontFamily="@font/roboto_bold"/>
+
+
+            <TextView
+                android:id="@+id/description_id"
+                android:textColor="#2d2d2d"
+                android:paddingTop="4sp"
+                android:textSize="14sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12sp"
+                tools:text="Shop Address"
+                android:fontFamily="@font/roboto_regular"/>
+
+
+            <TextView
+                android:id="@+id/description1_id"
+                android:textColor="#2d2d2d"
+                android:paddingTop="8sp"
+                android:textSize="14sp"
+                android:layout_marginStart="12sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Shop Min Price Order"
+                android:fontFamily="@font/roboto_italic"
+                android:layout_marginBottom="8sp"/>
+
+        </LinearLayout>
+
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+
+
+</LinearLayout>
+
+
