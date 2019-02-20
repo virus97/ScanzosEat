@@ -90,7 +90,7 @@ public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterSho
             txtTitle = itemView.findViewById(R.id.title_id);
             txtStreet = itemView.findViewById(R.id.description_id);
             txtMinPrice = itemView.findViewById(R.id.description1_id);
-            if((grid)&&(mContext.getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE)||((mContext.getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT)&&columns>=4))
+            if((grid)&&((mContext.getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE)||((mContext.getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT)&&columns>=4)))
                 imgShopMin = itemView.findViewById(R.id.imgShop);
 
             imgShop = itemView.findViewById(R.id.img_id);
@@ -120,7 +120,7 @@ public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterSho
             RequestManager requestManager = Glide.with(mContext);
             RequestBuilder requestBuilder = requestManager.load(img);
             requestBuilder.into(imgShop);
-            if((grid)&&(mContext.getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE)||((mContext.getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT)&&columns>=4))
+            if((grid)&&((mContext.getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE)||((mContext.getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT)&&columns>=4)))
                 requestBuilder.into(imgShopMin);
         }
 
