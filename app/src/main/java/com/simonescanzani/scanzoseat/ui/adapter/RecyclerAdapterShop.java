@@ -5,6 +5,8 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.RequestManager;
 import com.simonescanzani.scanzoseat.R;
+import com.simonescanzani.scanzoseat.Utilities;
 import com.simonescanzani.scanzoseat.datamodels.Shop;
 import com.simonescanzani.scanzoseat.ui.activities.ShopActivity;
 
@@ -77,14 +80,18 @@ public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterSho
         private ImageView imgShopMin;
         private CardView cardView ;
 
+        private int columns;
+
         public ListLayoutHolder(View itemView) {
             super(itemView);
+
+            columns = Utilities.calculateNoOfColumnsWidth(mContext);
 
             txtTitle = itemView.findViewById(R.id.title_id);
             txtStreet = itemView.findViewById(R.id.description_id);
             txtMinPrice = itemView.findViewById(R.id.description1_id);
-            /*if(grid)
-                imgShopMin = itemView.findViewById(R.id.imgShop);*/
+            if((grid)&&(mContext.getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE)||((mContext.getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT)&&columns>=4))
+                imgShopMin = itemView.findViewById(R.id.imgShop);
 
             imgShop = itemView.findViewById(R.id.img_id);
             cardView = itemView.findViewById(R.id.cardview_id);
@@ -113,8 +120,8 @@ public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterSho
             RequestManager requestManager = Glide.with(mContext);
             RequestBuilder requestBuilder = requestManager.load(img);
             requestBuilder.into(imgShop);
-            /*if(grid)
-                requestBuilder.into(imgShopMin);*/
+            if((grid)&&(mContext.getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE)||((mContext.getResources().getConfiguration().orientation== Configuration.ORIENTATION_PORTRAIT)&&columns>=4))
+                requestBuilder.into(imgShopMin);
         }
 
 
