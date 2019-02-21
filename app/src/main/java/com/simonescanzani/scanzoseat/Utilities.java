@@ -5,10 +5,16 @@ import android.content.Context;
 import androidx.annotation.StringRes;
 
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Map;
 
 import static androidx.core.content.ContextCompat.getSystemService;
 

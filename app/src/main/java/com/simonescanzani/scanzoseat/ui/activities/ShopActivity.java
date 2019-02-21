@@ -101,7 +101,6 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
         //int image = intent.getExtras().getInt("Thumbnail") ;
         String imageURL = intent.getExtras().getString("Thumbnail");
         id = intent.getExtras().getString("id");
-        Log.i("identificativo",Shop.ENDPOINT.concat("/").concat(id));
 
         restController = new RestController(this);
         restController.getRequest(Shop.ENDPOINT.concat("/").concat(id), this, this);

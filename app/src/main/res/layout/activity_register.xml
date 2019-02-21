@@ -130,7 +130,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_height="match_parent">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnRegisterNow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -139,7 +139,8 @@
             android:enabled="false"
             android:layout_marginStart="8sp"
             android:layout_marginEnd="8sp"
-            android:visibility="visible"/>
+            android:visibility="visible"
+            style="@style/RoundedCorner"/>
 
     </FrameLayout>
 </FrameLayout>

@@ -39,6 +39,8 @@ import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, Response.Listener<String>, Response.ErrorListener {
 
+    private static final String TAG = LoginActivity.class.getSimpleName();
+
     LinearLayout currentLayout;
 
     Button btnLogin, btnRegister;
@@ -202,6 +204,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 SharedPreferencesUtils.putValue(LoginActivity.this, SharedPreferencesUtils.USERNAME, json.getString("username"));
                 SharedPreferencesUtils.putValue(LoginActivity.this, SharedPreferencesUtils.EMAIL, json.getString("email"));
                 SharedPreferencesUtils.putValue(LoginActivity.this, SharedPreferencesUtils.JWT, jwt);
+                SharedPreferencesUtils.putValue(LoginActivity.this, SharedPreferencesUtils.ID, json.getString("_id"));
 
                 setResult(Activity.RESULT_OK);
                 finish();
@@ -210,7 +213,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Toast.makeText(LoginActivity.this, "Problema!", Toast.LENGTH_SHORT).show();
             }
         }catch (JSONException ex){
-            Log.i("Eccezione", ex.getMessage());
+            Log.i(TAG, ex.getMessage());
         }
     }
 }

@@ -77,10 +77,6 @@ public class MainActivity extends AppCompatActivity implements  Response.Listene
         spinner.setVisibility(View.GONE);
         spinner.setVisibility(View.VISIBLE);
 
-        final float scale = getResources().getDisplayMetrics().heightPixels;
-
-        Log.i("densitaSchermo", String.valueOf(scale));
-
 
         restController = new RestController(this);
         restController.getRequest(Shop.ENDPOINT, this, this);

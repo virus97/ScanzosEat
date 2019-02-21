@@ -1,6 +1,7 @@
 <resources>
-    <dimen name="app_bar_height">220dp</dimen>
-    <dimen name="app_bar_account_height">350dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="text_margin">16dp</dimen>
+    <dimen name="app_bar_height">220sp</dimen>
+    <dimen name="app_bar_account_height">350sp</dimen>
+    <dimen name="fab_margin">16sp</dimen>
+    <dimen name="text_margin">16sp</dimen>
+    <dimen name="mtrl_card_spacing">16sp</dimen>
 </resources>

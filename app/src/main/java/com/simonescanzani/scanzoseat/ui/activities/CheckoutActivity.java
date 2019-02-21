@@ -6,23 +6,48 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.provider.SyncStateContract;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.simonescanzani.scanzoseat.R;
+import com.simonescanzani.scanzoseat.SharedPreferencesUtils;
+import com.simonescanzani.scanzoseat.Utilities;
 import com.simonescanzani.scanzoseat.datamodels.Order;
 import com.simonescanzani.scanzoseat.datamodels.Product;
 import com.simonescanzani.scanzoseat.datamodels.Shop;
+import com.simonescanzani.scanzoseat.services.RestController;
 import com.simonescanzani.scanzoseat.ui.adapter.RecyclerAdapterCheckout;
 
-import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class CheckoutActivity extends AppCompatActivity implements RecyclerAdapterCheckout.OnItemRemovedListener {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+public class CheckoutActivity extends AppCompatActivity implements View.OnClickListener ,RecyclerAdapterCheckout.OnItemRemovedListener, Response.Listener<JSONObject>, Response.ErrorListener {
 
     RecyclerView recyclerView;
     private RecyclerAdapterCheckout adapter;
+
+    private RestController restController;
+
 
     private ArrayList<Product> lstOrdini;
 
@@ -31,6 +56,10 @@ public class CheckoutActivity extends AppCompatActivity implements RecyclerAdapt
     float price = 0;
 
     private Order order;
+
+    private Button btnPay;
+
+    private static final String TAG = CheckoutActivity.class.getSimpleName();
 
 
     @Override
@@ -44,6 +73,8 @@ public class CheckoutActivity extends AppCompatActivity implements RecyclerAdapt
         txtTotal = findViewById(R.id.txtTotal);
 
         recyclerView = findViewById(R.id.recyclerview_checkout);
+        btnPay = findViewById(R.id.btnPay);
+        btnPay.setOnClickListener(this);
 
         getData();
         price = getPrice();
@@ -95,8 +126,29 @@ public class CheckoutActivity extends AppCompatActivity implements RecyclerAdapt
         }
     }
 
+
     public boolean onCreateOptionsMenu(Menu menu) {
         return true;
+    }
+
+    //TODO hardcode
+    public JSONArray createData(){
+        JSONArray jsonArray = new JSONArray();
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("id", "5c6570b71a39104f0ba41137");
+            jsonObject.put("quantity", 2);
+            jsonArray.put(jsonObject);
+            jsonObject = new JSONObject();
+            jsonObject.put("id", "5c6570d61a39104f0ba41138");
+            jsonObject.put("quantity", 5);
+            jsonArray.put(jsonObject);
+        }catch (JSONException ex){
+            Log.e(TAG,ex.getMessage());
+        }
+
+        return jsonArray;
     }
 
     @Override
@@ -104,5 +156,38 @@ public class CheckoutActivity extends AppCompatActivity implements RecyclerAdapt
         //TODO manageItemRemoved
         this.price-=(price*quantity);
         txtTotal.setText("TOTAL "+this.price+"€");
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId()==R.id.btnPay){
+            restController = new RestController(this);
+            Log.i(TAG,createData().toString());
+
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("restaurant", "5c6570061a39104f0ba41134");
+                jsonObject.put("user", SharedPreferencesUtils.getStringValue(this, SharedPreferencesUtils.ID));
+                jsonObject.put("amount", 10);
+                jsonObject.put("products", createData());
+            }catch(JSONException ex){
+                Log.e(TAG, ex.getMessage());
+            }
+
+            Map<String,String> headers = new HashMap<>();
+            headers.put("Authorization", "Bearer ".concat(SharedPreferencesUtils.getStringValue(this, SharedPreferencesUtils.JWT)));
+
+            restController.postRequest("/orders", this, this, jsonObject, headers);
+        }
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        Log.e(TAG, error.toString());
+    }
+
+    @Override
+    public void onResponse(JSONObject response) {
+        Log.i(TAG, response.toString());
     }
 }

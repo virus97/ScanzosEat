@@ -37,6 +37,8 @@ import static com.simonescanzani.scanzoseat.Utilities.isUserNameValid;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener,Response.Listener<String>, Response.ErrorListener {
 
+    private static final String TAG = RegisterActivity.class.getSimpleName();
+
     final int LEN_PASS=6;
     Button btnRegister;
     EditText edtxEmail, edtxPass, edtxUsername;
@@ -154,7 +156,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 Toast.makeText(RegisterActivity.this, "Problema!", Toast.LENGTH_SHORT).show();
             }
         }catch (JSONException ex){
-            Log.i("Eccezione", ex.getMessage());
+            Log.i(TAG, ex.getMessage());
         }
     }
 

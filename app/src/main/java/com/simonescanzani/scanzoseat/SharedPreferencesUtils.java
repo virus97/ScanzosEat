@@ -12,6 +12,7 @@ public class SharedPreferencesUtils {
     public static final String USERNAME = "USERNAME";
     public static final String EMAIL = "EMAIL";
     public static final String JWT = "JWT";
+    public static final String ID = "ID";
 
 
     public static void putValue(Context context, String key, boolean value){

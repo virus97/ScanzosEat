@@ -18,6 +18,13 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
 
+    <style name="RoundedCorner" parent="Base.Widget.AppCompat.Button.Borderless">
+
+        <item name="android:background">@drawable/rounded_button_drawable</item>
+        <item name="android:textColor">@color/icons</item>
+    </style>
+
+
     <style name="BaseAppTheme" parent="Theme.MaterialComponents">
         <!-- enable window content transitions -->
 
