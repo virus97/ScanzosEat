@@ -4,6 +4,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +75,7 @@ public class RecyclerAdapterProduct extends RecyclerView.Adapter<RecyclerAdapter
 
         holder.setTitle(product.getNome());
         holder.setIngredienti(product.getIngredienti());
-        holder.setPrice(product.getPrezzo());
+        holder.setPrice(product.getPrezzoString());
         holder.setImage(product.getImage_url());
         holder.setQuantity(product.getQuantity());
     }
@@ -139,12 +140,12 @@ public class RecyclerAdapterProduct extends RecyclerView.Adapter<RecyclerAdapter
             Product product = productlist.get(getAdapterPosition());
             if(v.getId()== R.id.btnAggiungi){
                 product.increseQuantity();
-                onQuantityChangedListener.onChange(product.getPrezzoNumber());
+                onQuantityChangedListener.onChange(product.getPrezzo());
                 notifyItemChanged(getAdapterPosition());
             } else if (v.getId()==R.id.btnRimuovi){
                 if(product.getQuantity()!=0) {
                     product.decreaseQuantity();
-                    onQuantityChangedListener.onChange(product.getPrezzoNumber() * -1);
+                    onQuantityChangedListener.onChange(product.getPrezzo() * -1);
                     notifyItemChanged(getAdapterPosition());
                 }
             }

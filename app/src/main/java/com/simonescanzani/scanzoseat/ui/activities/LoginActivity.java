@@ -65,6 +65,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         onCreate(R.layout.activity_login_light);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setElevation(0);
     }
 
     protected void onCreate(@LayoutRes int layoutPassed) {

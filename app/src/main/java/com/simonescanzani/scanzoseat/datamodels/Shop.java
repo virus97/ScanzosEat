@@ -3,19 +3,43 @@ package com.simonescanzani.scanzoseat.datamodels;
 
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+
+@Entity(tableName = "Shop")
 public class Shop {
 
+    @ColumnInfo(name = "Title")
     private String Title;
+
+    @ColumnInfo(name = "Street")
     private String Street ;
+
+    @ColumnInfo(name = "minPrice")
     private float minPrice;
+
     private int Thumbnail ;
+
+    @ColumnInfo(name = "image_url")
     private String image_url;
+
+    @ColumnInfo(name = "shop_id")
     private String id;
+
+    @ColumnInfo(name = "rating")
     private float rating;
+
     public final static String ENDPOINT = "/restaurants";
+
+    @Ignore
+    private ArrayList<Product> products;
 
 
     public Shop() {
@@ -39,6 +63,11 @@ public class Shop {
             this.id = jsonShop.getString("id");
             this.rating=(float)(jsonShop.getDouble("rating")/10);
             Log.i("rating", String.valueOf(this.rating));
+            JSONArray prodotti = jsonShop.getJSONArray("products");
+            products = new ArrayList<>();
+            for(int i=0; i<prodotti.length(); i++){
+                products.add(new Product(prodotti.getJSONObject(i)));
+            }
         }catch (JSONException ex){
             ex.getStackTrace();
         }
@@ -53,11 +82,11 @@ public class Shop {
         return Street;
     }
 
-    public String getMinPrice() {
+    public String getMinPriceString() {
         return "Spesa Minima: "+minPrice+ "€";
     }
 
-    public float getMinPriceNumber(){
+    public float getMinPrice(){
         return minPrice;
     }
 
@@ -104,5 +133,13 @@ public class Shop {
 
     public void setRating(float rating) {
         this.rating = rating;
+    }
+
+    public void setProducts(ArrayList<Product> products) {
+        this.products = products;
+    }
+
+    public ArrayList<Product> getProducts(){
+        return this.products;
     }
 }

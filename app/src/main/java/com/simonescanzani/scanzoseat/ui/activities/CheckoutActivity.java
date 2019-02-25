@@ -1,14 +1,16 @@
 package com.simonescanzani.scanzoseat.ui.activities;
 
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.provider.SyncStateContract;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,19 +19,14 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.simonescanzani.scanzoseat.R;
 import com.simonescanzani.scanzoseat.SharedPreferencesUtils;
-import com.simonescanzani.scanzoseat.Utilities;
 import com.simonescanzani.scanzoseat.datamodels.Order;
 import com.simonescanzani.scanzoseat.datamodels.Product;
 import com.simonescanzani.scanzoseat.datamodels.Shop;
+import com.simonescanzani.scanzoseat.services.AppDatabase;
 import com.simonescanzani.scanzoseat.services.RestController;
 import com.simonescanzani.scanzoseat.ui.adapter.RecyclerAdapterCheckout;
 
@@ -39,7 +36,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class CheckoutActivity extends AppCompatActivity implements View.OnClickListener ,RecyclerAdapterCheckout.OnItemRemovedListener, Response.Listener<JSONObject>, Response.ErrorListener {
 
@@ -49,7 +48,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     private RestController restController;
 
 
-    private ArrayList<Product> lstOrdini;
+    private ArrayList<Product> lstOrdini = new ArrayList<>();
 
     TextView txtTotal;
 
@@ -76,42 +75,42 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         btnPay = findViewById(R.id.btnPay);
         btnPay.setOnClickListener(this);
 
-        getData();
-        price = getPrice();
-
-        txtTotal.setText("TOTAL "+price+"€");
-
-        order.setList(lstOrdini);
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new RecyclerAdapterCheckout(R.layout.view_item_checkout, order,this);
+        adapter = new RecyclerAdapterCheckout(R.layout.view_item_checkout, null,this);
         adapter.setOnItemRemovedListener(this);
         recyclerView.setAdapter(adapter);
 
+        new DatabaseAsyncTask().execute();
+
     }
 
-    //TODO hardcode
-    public void getData(){
-        order = new Order(new Shop("Lu Gulosone","Via Piazza Tevere 98, Rieti",8.0f,R.drawable.pizza_margherita_min));
-        lstOrdini = new ArrayList<>();
-        lstOrdini.add(new Product("Margherita","Acqua e Farina",5.0f, R.drawable.pizza_margherita_min));
-        lstOrdini.add(new Product("Boscaiola","Acqua e Farina",7.0f, R.drawable.pizza_boscaiola_min));
-        lstOrdini.add(new Product("Norcina","Acqua e Farina",6.0f, R.drawable.pizza_margherita_min));
-        lstOrdini.add(new Product("Diavola","Acqua e Farina",8.0f, R.drawable.pizza_margherita_min));
-        lstOrdini.add(new Product("Caprese","Acqua e Farina",5.5f, R.drawable.pizza_boscaiola_min));
-        int cont = 1;
-        for(Product i : lstOrdini){
-            i.setQuantity(cont);
-            cont++;
+    private class DatabaseAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            AppDatabase appDatabase = AppDatabase.createIstance(CheckoutActivity.this);
+            List<Order> allOrder = appDatabase.orderDao().getAll();
+            if (allOrder != null && allOrder.size() > 0) {
+                order = allOrder.get(0);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Log.i("shoppete", order.getShop().getTitle());
+            txtTotal.setText("TOTAL "+ order.getPrezzo() +"€");
+            adapter.setData(order);
         }
     }
-
 
     public float getPrice(){
         float price = 0.0f;
         for(Product i : lstOrdini){
-            price+=(i.getPrezzoNumber()*i.getQuantity());
+            price+=(i.getPrezzo()*i.getQuantity());
         }
         order.setPrezzo(price);
         return price;

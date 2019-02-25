@@ -29,17 +29,18 @@ public class Product {
         }
     }
 
-    public String getPrezzo() {
+    public String getPrezzoString() {
         return "Prezzo: " + prezzo + " €";
     }
 
-    public float getPrezzoNumber(){
-        return prezzo;
+    public float getPrezzo(){
+        return this.prezzo;
     }
 
     public void setPrezzo(float prezzo) {
         this.prezzo = prezzo;
     }
+
 
     public String getNome() {
         return nome;

@@ -1,6 +1,7 @@
 package com.simonescanzani.scanzoseat.ui.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -55,6 +56,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        getSupportActionBar().setElevation(0);
+
         btnRegister = findViewById(R.id.btnRegisterNow);
         edtxEmail = findViewById(R.id.edtxEmail);
         edtxPass = findViewById(R.id.edtxPass);
@@ -106,7 +109,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             String passwordInput = edtxPass.getText().toString().trim();
             String usernameInput = edtxUsername.getText().toString().trim();
 
-            btnRegister.setEnabled(isEmailValid(emailInput) && !(passwordInput.length()<LEN_PASS) && isUserNameValid(usernameInput));
+
+            if(isEmailValid(emailInput) && !(passwordInput.length()<LEN_PASS) && isUserNameValid(usernameInput)) {
+                btnRegister.setEnabled(true);
+                btnRegister.setBackgroundResource(R.drawable.rounded_button_drawable);
+            }else{
+                btnRegister.setEnabled(false);
+                btnRegister.setBackgroundResource(R.drawable.rounded_button_drawable_unpressed);
+            }
         }
 
         @Override

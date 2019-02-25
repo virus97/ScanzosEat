@@ -1,11 +1,12 @@
 package com.simonescanzani.scanzoseat.ui.adapter;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,17 +15,20 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.RequestManager;
 import com.simonescanzani.scanzoseat.R;
 import com.simonescanzani.scanzoseat.datamodels.Order;
 import com.simonescanzani.scanzoseat.datamodels.Product;
 import com.simonescanzani.scanzoseat.datamodels.Shop;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class RecyclerAdapterCheckout extends RecyclerView.Adapter {
 
-    private final Shop shop;
-    private ArrayList<Product> orderList;
+    private Shop shop;
+    private List<Product> orderList;
     private Context mContext;
     private int idVista;
     private final int CONT_PRE_ORDER = 1;
@@ -36,6 +40,11 @@ public class RecyclerAdapterCheckout extends RecyclerView.Adapter {
         void onItemRemoved(float price, int quantity);
     }
 
+    public void setData(Order dataSet) {
+        this.orderList = dataSet.getProducts();
+        this.shop = dataSet.getShop();
+        notifyDataSetChanged();
+    }
 
     private OnItemRemovedListener onItemRemovedListener;
 
@@ -49,8 +58,10 @@ public class RecyclerAdapterCheckout extends RecyclerView.Adapter {
 
 
     public RecyclerAdapterCheckout(int idVista, Order order, Context context) {
-        this.orderList = order.getList();
-        this.shop = order.getShop();
+        if (order != null){
+            this.orderList = order.getProducts();
+            this.shop = order.getShop();
+        }
         this.mContext = context;
         this.idVista = idVista;
     }
@@ -91,13 +102,15 @@ public class RecyclerAdapterCheckout extends RecyclerView.Adapter {
             holderCasted.setTitle(order.getNome());
 
             holderCasted.setDescription(order.getIngredienti());
-            holderCasted.setPrice(order.getPrezzo());
-            holderCasted.setThumbnail(order.getThumbnail());
+            holderCasted.setPrice(order.getPrezzoString());
+            holderCasted.setImage(order.getImage_url());
             holderCasted.setQuantity(order.getQuantity());
         }else{
             TitleViewHolder holderCasted = ((TitleViewHolder)holder);
-            holderCasted.setTitle(shop.getTitle());
-            holderCasted.setStreet(shop.getStreet());
+            if (shop != null) {
+                holderCasted.setTitle(shop.getTitle());
+                holderCasted.setStreet(shop.getStreet());
+            }
         }
     }
 
@@ -148,28 +161,50 @@ public class RecyclerAdapterCheckout extends RecyclerView.Adapter {
             edtxQuantity.setText(String.valueOf(quantity));
         }
 
+        public void setImage(String img){
+            RequestManager requestManager = Glide.with(mContext);
+            RequestBuilder requestBuilder = requestManager.load(img);
+            requestBuilder.into(imgOrder);
+        }
+
 
         @Override
         public void onClick(View v) {
             if (v.getId() == R.id.btnRemove) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.Theme_MaterialComponents_Light_Dialog_Alert);
+
+                builder.setTitle("ATTENZIONE");
+
                 builder.setMessage("Vuoi veramente cancellare il prodotto?");
-                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                builder.setPositiveButton("SI", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        onItemRemovedListener.onItemRemoved(orderList.get(getAdapterPosition()-CONT_PRE_ORDER).getPrezzoNumber(), orderList.get(getAdapterPosition()-CONT_PRE_ORDER).getQuantity());
+                        onItemRemovedListener.onItemRemoved(orderList.get(getAdapterPosition()-CONT_PRE_ORDER).getPrezzo(), orderList.get(getAdapterPosition()-CONT_PRE_ORDER).getQuantity());
                         orderList.remove(getAdapterPosition()-CONT_PRE_ORDER);
                         notifyItemRemoved(getAdapterPosition());
                         dialog.dismiss();
                     }
                 });
+
+                // Set the negative button
                 builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 });
-                builder.create().show();
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+/*
+                Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+
+                positiveButton.setTextColor(mContext.getResources().getColor(R.color.black_text));
+                negativeButton.setTextColor(mContext.getResources().getColor(R.color.black_text));
+*/
             }
 
         }

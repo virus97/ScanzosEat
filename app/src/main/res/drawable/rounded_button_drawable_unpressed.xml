@@ -5,11 +5,9 @@
     <corners
         android:radius="40dp" />
 
-    <gradient
-        android:angle="90"
-        android:endColor="#7986cb"
-        android:startColor="#939ed5"
-        android:type="linear" />
+    <solid
+        android:color="@color/secondary_text"
+        />
 
     <stroke
         android:color="#FFFFFF"

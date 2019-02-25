@@ -4,4 +4,5 @@
     <dimen name="fab_margin">16sp</dimen>
     <dimen name="text_margin">16sp</dimen>
     <dimen name="mtrl_card_spacing">16sp</dimen>
+    <dimen name="padding_layout">24sp</dimen>
 </resources>

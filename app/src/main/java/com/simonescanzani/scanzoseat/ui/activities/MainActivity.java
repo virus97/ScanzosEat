@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -66,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements  Response.Listene
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         columnsWidth = Utilities.calculateNoOfColumnsWidth(this);
+
+        getSupportActionBar().setElevation(0);
 
         changeLayout(SharedPreferencesUtils.getBooleanValue(this,SharedPreferencesUtils.GRID));
 
@@ -232,6 +235,7 @@ public class MainActivity extends AppCompatActivity implements  Response.Listene
             JSONArray jsonArray = new JSONArray(response);
             //JSONArray jsonArray = new JSONObject(response).getJSONArray("data");
             for(int i=0; i<jsonArray.length(); i++){
+                Log.i(TAG,jsonArray.getJSONObject(i).toString());
                 Shop shop = new Shop(jsonArray.getJSONObject(i));
                 lstShop.add(shop);
             }

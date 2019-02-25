@@ -2,12 +2,22 @@ package com.simonescanzani.scanzoseat.ui.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,7 +29,9 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,8 +42,10 @@ import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.RequestManager;
 import com.simonescanzani.scanzoseat.R;
 import com.simonescanzani.scanzoseat.SharedPreferencesUtils;
+import com.simonescanzani.scanzoseat.datamodels.Order;
 import com.simonescanzani.scanzoseat.datamodels.Product;
 import com.simonescanzani.scanzoseat.datamodels.Shop;
+import com.simonescanzani.scanzoseat.services.AppDatabase;
 import com.simonescanzani.scanzoseat.services.RestController;
 import com.simonescanzani.scanzoseat.ui.adapter.RecyclerAdapterProduct;
 
@@ -40,6 +54,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 public class ShopActivity extends AppCompatActivity implements RecyclerAdapterProduct.onQuantityChangedListener, Response.Listener<String>, Response.ErrorListener {
 
@@ -71,6 +86,13 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
 
     private static final int REQUEST_CODE = 2001;
 
+    LayerDrawable drawableFile;
+    GradientDrawable gradientDrawable;
+
+    LinearLayout linearLayout;
+
+    private Shop shop;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,13 +115,19 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
         txtTotal = findViewById(R.id.txtTotal);
         txtProdotti = findViewById(R.id.txtProdotti);
 
+        linearLayout = findViewById(R.id.linear);
+
+
+        drawableFile = (LayerDrawable) getResources().getDrawable(R.drawable.layout_backgroud);
+        gradientDrawable = (GradientDrawable) drawableFile.findDrawableByLayerId(R.id.sfumatura);
+
 
         Intent intent = getIntent();
         Title = intent.getExtras().getString("Title");
         Street = intent.getExtras().getString("Street");
         MinPrice = intent.getExtras().getFloat("MinPrice");
         //int image = intent.getExtras().getInt("Thumbnail") ;
-        String imageURL = intent.getExtras().getString("Thumbnail");
+        final String imageURL = intent.getExtras().getString("Thumbnail");
         id = intent.getExtras().getString("id");
 
         restController = new RestController(this);
@@ -118,6 +146,7 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setElevation(0);
 
 
         setTitle(Title);
@@ -128,14 +157,16 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
         RequestBuilder requestBuilder = requestManager.load(imageURL);
         requestBuilder.into(img);
 
+
+        getDominantColor(imageURL);
+        linearLayout.setBackground(drawableFile);
+
+
         btnCheckOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // SharedPreferences prefsAccount = getSharedPreferences(ACCOUNT_NAME, MODE_PRIVATE);
-                //if(!(prefsAccount.getString(JWT, "").equals(""))) {
                 if(SharedPreferencesUtils.getStringValue(ShopActivity.this,SharedPreferencesUtils.JWT)!=null){
-                    Intent intent = new Intent(ShopActivity.this, CheckoutActivity.class);
-                    startActivity(intent);
+                    (new DatabaseAsyncTask()).execute();
                 }else {
                     Intent intent = new Intent(ShopActivity.this, LoginActivity.class);
                     startActivityForResult(intent,REQUEST_CODE);
@@ -148,14 +179,15 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Uri gmmIntentUri = Uri.parse("geo:0,0?q=Ristorante "+Title+" "+Street);
+                Uri gmmIntentUri = Uri.parse("geo:0,0?q="+Title+" "+Street);
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 startActivity(mapIntent);
             }
         });
 
-        AppBarLayout mAppBarLayout = findViewById(R.id.app_bar);
+        final AppBarLayout mAppBarLayout = findViewById(R.id.app_bar);
+
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = false;
             int scrollRange = -1;
@@ -168,25 +200,75 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
                 if (scrollRange + verticalOffset == 0) {
                     isShow = true;
                     showOption(R.id.action_maps);
+                    gradientDrawable.setColor(ShopActivity.this.getResources().getColor(R.color.colorPrimary));
+                    linearLayout.setBackground(drawableFile);
+
                 } else if (isShow) {
                     isShow = false;
                     hideOption(R.id.action_maps);
+                    getDominantColor(imageURL);
+                    linearLayout.setBackground(drawableFile);
                 }
             }
         });
     }
+
+    private class DatabaseAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        protected Void doInBackground(Void... voids) {
+          lstProduct.removeIf(new Predicate<Product>() {
+                @Override
+                public boolean test(Product x) {
+                    return x.getQuantity() < 1;
+                }
+            });
+
+            AppDatabase appDatabase = AppDatabase.createIstance(ShopActivity.this);
+            appDatabase.orderDao().insert(new Order(0, shop,lstProduct, total));
+            Log.i("shoppete", shop.getTitle());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Intent intent = new Intent(ShopActivity.this, CheckoutActivity.class);
+            startActivity(intent);
+        }
+    }
+
 
     private void updateTotal(float item){
         total+=item;
         txtTotal.setText("TOTAL "+total+"€");
         if(total>=MinPrice) {
             btnCheckOut.setEnabled(true);
-            //btnCheckOut.setTextColor(Color.parseColor("#6200ee"));
+            btnCheckOut.setTextColor(Color.parseColor("#6200ee"));
         }
         else {
             btnCheckOut.setEnabled(false);
-            //btnCheckOut.setTextColor(Color.parseColor("#A9A9A9"));
+            btnCheckOut.setTextColor(Color.parseColor("#A9A9A9"));
         }
+    }
+
+
+    public void getDominantColor(String imageURL) {
+        final Bitmap[] newBitmap = new Bitmap[1];
+        final int[] color = new int[1];
+        Glide.with(this)
+                .asBitmap()
+                .load(imageURL)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        newBitmap[0] = Bitmap.createScaledBitmap(resource, 1, 1, true);
+                        color[0] = newBitmap[0].getPixel(0, 0);
+                        newBitmap[0].recycle();
+
+                        gradientDrawable.setColor(color[0]);
+                    }
+                });
     }
 
     private void updateProgress(int progress){
@@ -197,22 +279,6 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
     public void onChange(float price) {
         updateTotal(price);
         updateProgress((int)(total*100));
-    }
-
-    //TODO hardcode
-    public void setProduct(){
-        lstProduct = new ArrayList<Product>();
-        lstProduct.add(new Product("Margherita","Acqua e Farina",5.0f, R.drawable.pizza_margherita_min));
-        lstProduct.add(new Product("Boscaiola","Acqua e Farina",7.0f, R.drawable.pizza_boscaiola_min));
-        lstProduct.add(new Product("Norcina","Acqua e Farina",6.0f, R.drawable.pizza_margherita_min));
-        lstProduct.add(new Product("Diavola","Acqua e Farina",8.0f, R.drawable.pizza_margherita_min));
-        lstProduct.add(new Product("Caprese","Acqua e Farina",5.5f, R.drawable.pizza_boscaiola_min));
-        lstProduct.add(new Product("Alici e Tonno","Acqua e Farina",7.5f, R.drawable.pizza_margherita_min));
-        lstProduct.add(new Product("Quattro Stagioni","Acqua e Farina",5.0f, R.drawable.pizza_boscaiola_min));
-        lstProduct.add(new Product("Deppiù","Acqua e Farina",9.0f, R.drawable.pizza_margherita_min));
-        lstProduct.add(new Product("Quattro Formaggi","Acqua e Farina",10.5f, R.drawable.pizza_margherita_min));
-        lstProduct.add(new Product("Gorgonzola","Acqua e Farina",11.0f, R.drawable.pizza_boscaiola_min));
-        lstProduct.add(new Product("Wurstel","Acqua e Farina",10.2f, R.drawable.pizza_margherita_min));
     }
 
     @Override
@@ -268,7 +334,7 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
             btnCheckOut.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(ShopActivity.this, CheckoutActivity.class));
+                    new DatabaseAsyncTask().execute();
                 }
             });
         }
@@ -303,6 +369,8 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
 
         //Start Parsing
         try {
+
+            shop = new Shop(new JSONObject(response));
             lstProduct = new ArrayList<>();
            // JSONArray jsonArray = new JSONArray(response);
             JSONArray jsonArray = new JSONObject(response).getJSONArray("products");

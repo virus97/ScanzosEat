@@ -18,11 +18,22 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
 
+
+    <!--- BOTTON STYLE -->
+
     <style name="RoundedCorner" parent="Base.Widget.AppCompat.Button.Borderless">
 
         <item name="android:background">@drawable/rounded_button_drawable</item>
         <item name="android:textColor">@color/icons</item>
     </style>
+
+    <style name="RoundedCornerTrasparent" parent="Base.Widget.AppCompat.Button.Borderless">
+
+        <item name="android:background">@drawable/rounded_button_drawable_unpressed</item>
+        <item name="android:textColor">@color/icons</item>
+    </style>
+
+    <!--- BOTTON STYLE END-->
 
 
     <style name="BaseAppTheme" parent="Theme.MaterialComponents">

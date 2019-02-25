@@ -48,13 +48,14 @@
                         android:textStyle="bold"
                         app:layout_anchor="@+id/recyclerview_checkout"/>
 
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btnPay"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/pay"
                         android:textSize="20sp"
-                        app:layout_anchor="@+id/recyclerview_checkout" />
+                        app:layout_anchor="@+id/recyclerview_checkout"
+                        style="@style/RoundedCorner"/>
 
                 </LinearLayout>
 

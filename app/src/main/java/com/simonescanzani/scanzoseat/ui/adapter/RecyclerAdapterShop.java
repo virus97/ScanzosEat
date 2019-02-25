@@ -66,7 +66,7 @@ public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterSho
         final Shop shop = shoplist.get(position);
         holder.setTitle(shop.getTitle());
         holder.setStreet(shop.getStreet());
-        holder.setMinPrice(shop.getMinPrice());
+        holder.setMinPrice(shop.getMinPriceString());
         //holder.setThumbnail(shop.getThumbnail());
         holder.setImage(shop.getImage_url());
         holder.setRating(shop.getRating());
@@ -146,7 +146,7 @@ public class RecyclerAdapterShop extends RecyclerView.Adapter<RecyclerAdapterSho
 
                 intent.putExtra("Title",item.getTitle());
                 intent.putExtra("Street",item.getStreet());
-                intent.putExtra("MinPrice",item.getMinPriceNumber());
+                intent.putExtra("MinPrice",item.getMinPrice());
                 intent.putExtra("Thumbnail",item.getImage_url());
                 intent.putExtra("id", item.getId());
                 // start the activity
