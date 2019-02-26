@@ -1,6 +1,5 @@
 package com.simonescanzani.scanzoseat.ui.activities;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,7 +24,6 @@ import com.simonescanzani.scanzoseat.R;
 import com.simonescanzani.scanzoseat.SharedPreferencesUtils;
 import com.simonescanzani.scanzoseat.datamodels.Order;
 import com.simonescanzani.scanzoseat.datamodels.Product;
-import com.simonescanzani.scanzoseat.datamodels.Shop;
 import com.simonescanzani.scanzoseat.services.AppDatabase;
 import com.simonescanzani.scanzoseat.services.RestController;
 import com.simonescanzani.scanzoseat.ui.adapter.RecyclerAdapterCheckout;
@@ -38,7 +36,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 
 public class CheckoutActivity extends AppCompatActivity implements View.OnClickListener ,RecyclerAdapterCheckout.OnItemRemovedListener, Response.Listener<JSONObject>, Response.ErrorListener {
 
@@ -103,6 +100,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         protected void onPostExecute(Void aVoid) {
             Log.i("shoppete", order.getShop().getTitle());
             txtTotal.setText("TOTAL "+ order.getPrezzo() +"€");
+            price=order.getPrezzo();
             adapter.setData(order);
         }
     }

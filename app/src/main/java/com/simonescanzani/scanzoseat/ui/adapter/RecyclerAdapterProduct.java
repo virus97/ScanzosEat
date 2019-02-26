@@ -27,6 +27,9 @@ public class RecyclerAdapterProduct extends RecyclerView.Adapter<RecyclerAdapter
     private Context mContext;
     private float minPrice;
 
+    public ArrayList<Product> getProductlist() {
+        return productlist;
+    }
 
     public RecyclerAdapterProduct(ArrayList<Product> contactsList, float minPrice, Context context) {
         this.productlist = contactsList;
@@ -40,6 +43,10 @@ public class RecyclerAdapterProduct extends RecyclerView.Adapter<RecyclerAdapter
 
     public void setOnQuantityChangedListener(RecyclerAdapterProduct.onQuantityChangedListener onQuantityChangedListener) {
         this.onQuantityChangedListener = onQuantityChangedListener;
+    }
+
+    public ArrayList<Product> getData() {
+        return productlist;
     }
 
     public interface onQuantityChangedListener{

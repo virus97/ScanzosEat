@@ -54,6 +54,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
 public class ShopActivity extends AppCompatActivity implements RecyclerAdapterProduct.onQuantityChangedListener, Response.Listener<String>, Response.ErrorListener {
@@ -218,16 +219,20 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected Void doInBackground(Void... voids) {
-          lstProduct.removeIf(new Predicate<Product>() {
-                @Override
-                public boolean test(Product x) {
-                    return x.getQuantity() < 1;
-                }
-            });
+            List<Product> prod2 = new ArrayList<>(listAdapter.getData());
+              prod2.removeIf(new Predicate<Product>() {
+                    @Override
+                    public boolean test(Product x) {
+                        return x.getQuantity() < 1;
+                    }
+                });
+
 
             AppDatabase appDatabase = AppDatabase.createIstance(ShopActivity.this);
-            appDatabase.orderDao().insert(new Order(0, shop,lstProduct, total));
+            appDatabase.orderDao().deleteAll();
+            appDatabase.orderDao().insert(new Order(0, shop,prod2, total));
             Log.i("shoppete", shop.getTitle());
+
             return null;
         }
 
@@ -350,6 +355,7 @@ public class ShopActivity extends AppCompatActivity implements RecyclerAdapterPr
         MenuItem item = menu.findItem(id);
         item.setVisible(true);
     }
+
 
     @Override
     public boolean onSupportNavigateUp() {
